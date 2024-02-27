@@ -1,0 +1,139 @@
+<html style="width:1280px;height:1024px;position:absolute;left:0px;top:0px;">
+    <head>
+        <meta charset="UTF-8">
+        <script type="text/javascript" src="/wai/wai.js"></script>
+        <link href="/wai/default.css" rel="stylesheet" type="text/css">
+        
+        <script>
+            function enviarDados() {
+              var ssid = document.getElementById("ssid").value;
+            
+              var xhr = new XMLHttpRequest();
+              xhr.open("POST", window.location.pathname, true);
+              xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+              xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                  // Tratamento de resposta, se necessário
+                  console.log(xhr.responseText);
+                }
+              };
+              var data = "ssid=" + encodeURIComponent(ssid);
+              xhr.send(data);
+            }
+        </script>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+
+    <body>
+        <span><h1>Estufa Automatizada</h1></span>   
+
+        <ul class="menu">
+            <li><a href="homeHorta.html">Home</a></li>
+            <li>
+              <a href="#">Configurações</a>
+              <ul class="submenu">
+                <li><a href="ConfigControlador.html">Controlador</a></li>
+                <li><a href="#">Config. Sensores</a></li>
+                <li><a href="#">Calibração Sensores</a></li>
+                <li><a href="#">Calibração Atuadores</a></li>
+                <li><a href="#">Log</a></li>
+              </ul>
+            </li>
+            <li><a href="#">Log</a></li>
+            <li><a href="#">Reiniciar</a></li>
+        </ul>
+
+        <div class="space-before"></div>
+        <div class="controller-info">
+            <div class="controller-name">NOME_CONTROLADOR</div>
+            <div class="network-info">
+                Rede conectada: NOME_REDE<br>
+                IP: ENDERECO_IP
+            </div>
+        </div>
+        <br>
+
+        <div class="container">
+            <div class="container-header">
+                <h2 class="container-header-text">Controlador</h2>
+            </div>
+            <form id="DadosControlador">
+                <div class="form-field">
+                    <label for="nome" class="form-label-rede">Nome:</label>
+                    <input type="text" id="nome" name="nome" placeholder="VALOR_NOME" class="form-field">
+                    <br>
+                    <button class="submit-button" type="button" onclick="enviarDados()">Salvar</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="space-before"></div>
+
+        <div class="container">
+            <div class="container-header">
+                <h2 class="container-header-text">Rede Externa</h2>
+            </div>
+            <form id="DadosRede">
+                <div class="form-field">
+                    <label for="ssid" class="form-label-rede">SSID:</label>
+                    <input type="text" id="ssid" name="ssid" placeholder="VALOR_SSID" class="form-field">
+                    <br>
+                    <label for="senha" class="form-label-rede">Senha:</label>
+                    <input type="text" id="senha" name="ssid" placeholder="VALOR_SENHA" class="form-field">
+                    <br>
+                    <button class="submit-button" type="button" onclick="enviarDados()">Salvar</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="space-before"></div>
+
+        <div class="container">
+            <div class="container-header">
+                <h2 class="container-header-text">Rede Interna</h2>
+            </div>
+            <form id="DadosRedeInterna">
+                <div class="form-field">
+                    <label for="ssid_esp" class="form-label-rede">SSID:</label>
+                    <input type="text" id="ssid_esp" name="ssid_esp" placeholder="VALOR_SSID_ESP" class="form-field">
+                    <br>
+                    <label for="senha_esp" class="form-label-rede">Senha:</label>
+                    <input type="text" id="senha_esp" name="ssid_esp" placeholder="VALOR_SENHA_ESP" class="form-field">
+                    <br>
+                    <button class="submit-button" type="button" onclick="enviarDados()">Salvar</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="space-before"></div>
+
+        <div class="container">
+            <div class="container-header">
+                <h2 class="container-header-text">Sensores e Atuadores</h2>
+            </div>
+            <form id="DadosSensores">
+                <div class="form-field">
+                    <label for="qtdSense" class="form-label-sensAtua">Quantidade sensores:</label>
+                    <input type="text" id="qtdSense" name="qtdSense" placeholder="QTD_SENSORES" class="form-field">
+                    <br>
+                    <label for="portaSense" class="form-label-sensAtua">Porta inicial:</label>
+                    <input type="text" id="portaSense" name="portaSense" placeholder="PORTA_SENSORES" class="form-field">
+                    <br>
+                    <br>
+                    <label for="qtdAtua" class="form-label-sensAtua">Quantidade atuadores:</label>
+                    <input type="text" id="qtdAtua" name="qtdAtua" placeholder="QTD_ATUADORES" class="form-field">
+                    <br>
+                    <label for="portaAtua" class="form-label-sensAtua">Porta inicial:</label>
+                    <input type="text" id="portaAtua" name="portaAtua" placeholder="PORTA_ATUADORES" class="form-field">
+                    <br>
+                    <br>
+                    <label for="amostragem" class="form-label-sensAtua">Tempo de amostragem:</label>
+                    <input type="text" id="amostragem" name="amostragem" placeholder="AMOSTRAGEM" class="form-field">
+                    <br>
+                    <button class="submit-button" type="button" onclick="enviarDados()">Salvar</button>
+                </div>
+            </form>
+        </div>
+        <br>
+    </body>
+</html>

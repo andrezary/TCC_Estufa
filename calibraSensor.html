@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário do Sensor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <span><h1>Estufa Automatizada</h1></span>   
+
+    <ul class="menu">
+        <li><a href="homeHorta.html">Home</a></li>
+        <li>
+          <a href="#">Configurações</a>
+          <ul class="submenu">
+            <li><a href="ConfigControlador.html">Controlador</a></li>
+            <li><a href="#">Config. Sensores</a></li>
+            <li><a href="#">Calibração Sensores</a></li>
+            <li><a href="#">Calibração Atuadores</a></li>
+            <li><a href="#">Log</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Log</a></li>
+        <li><a href="#">Reiniciar</a></li>
+    </ul>
+    <div class="space-before"></div>
+    
+    <div class="container">
+        <div class="container-header">
+            <h3 class="container-header-text">Sensor X</h3>
+        </div>
+        <form id="formularioSensor">
+            <div class="form-field">
+                <label for="nomeSensor" class="form-label-configSensor">Nome do Sensor:</label>
+                <input type="text" id="nomeSensor" name="nomeSensor" placeholder="NOME_SENSOR" class="form-field">
+            </div>
+            <br>
+            <div class="form-field">
+            <label for="tipoSensor" class="form-label-configSensor">Tipo do Sensor:</label>
+            <select id="tipoSensor" name="tipoSensor" class="form-dropdown">
+                <option value="Temperatura">Temperatura</option>
+                <option value="Umidade">Umidade</option>
+                <option value="Iluminação">Iluminação</option>
+                <option value="Outros">Outros</option>
+            </select>
+            </div>
+            <br>
+            <div class="form-field">
+            <label class="form-label-configSensor">Valor Atual:</label>
+            <label id="valorAtual" class="form-label-configSensor">N/A</label>
+            <button type="button" class="btn">Atualizar</button>
+            </div>
+            <br>
+            <div class="space-before"></div>
+            <div class="subcontainer">
+                <div class="subcontainer-header">
+                    <div class="container-header-text">Valor Mínimo:</div>
+                </div>
+                <div class="form-field">
+                    <label for="valorMin" class="form-label-configSensor">Entrada:</label>
+                    <input type="text" id="valorMin" name="valorMin" placeholder="Valor Mínimo" class="form-field">
+                </div>
+                <br>
+                <div class="form-field">
+                    <label for="valorMin" class="form-label-configSensor">Real:</label>
+                    <input type="text" id="valorMin" name="valorMin" placeholder="Valor Mínimo" class="form-field">
+                </div>
+            </div>
+            <br>
+            <div class="space-before"></div>
+            <div class="subcontainer">
+                <div class="subcontainer-header">
+                    <div class="container-header-text">Valor Máximo:</div>
+                </div>
+                <div class="form-field">
+                    <label for="valorMax" class="form-label-configSensor">Entrada:</label>
+                    <input type="text" id="valorMax" name="valorMax" placeholder="Valor Máximo" class="form-field">
+                </div>
+                <br>
+                <div class="form-field">
+                    <label for="valorMax" class="form-label-configSensor">Real:</label>
+                    <input type="text" id="valorMax" name="valorMax" placeholder="Valor Máximo" class="form-field">
+                    </div>
+            </div>
+            <br>
+            <div class="space-before"></div>
+            <div class="subcontainer">
+                <div class="subcontainer-header">
+                    <div class="container-header-text">Valor Acionamento:</div>
+                </div>    
+                <div class="form-field">
+                    <label for="valorAcionamentoSubida" class="form-label-configSensor">Subida:</label>
+                    <input type="text" id="valorAcionamentoSubida" name="valorAcionamentoSubida" placeholder="Valor de Acionamento Subida" class="form-field">
+                </div>
+                <br>
+                <div class="form-field">
+                    <label for="valorAcionamentoDescida" class="form-label-configSensor">Descida:</label>
+                    <input type="text" id="valorAcionamentoDescida" name="valorAcionamentoDescida" placeholder="Valor de Acionamento Descida" class="form-field">
+                </div>
+            </div>
+            <br>
+            <button type="submit" class="btn">Salvar</button>
+        </form>
+    </div>
+
+</body>
+</html>

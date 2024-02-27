@@ -3,56 +3,67 @@
         <meta charset="UTF-8">
         <script type="text/javascript" src="/wai/wai.js"></script>
         <link href="/wai/default.css" rel="stylesheet" type="text/css">
-        <style>h1{
-                color: black;
-                font-weight: bold;
-                text-decoration: underline;
-                text-align: center;
-                padding-top: 30px;
-            }
-            .LetraBVerde{
-                color: green;
-                font-weight: bold;
-
-            }
-            .LetraBAmarelo{
-                color: yellow;
-                font-weight: bold;
-
-            }
-            .LetraBAmarelo{
-                color: yellow;
-                font-weight: bold;
-
-            }
-            .dotgreen {
-                height: 25px;
-                width: 25px;
-                background-color: green;
-                border-radius: 50%;
-                display: inline-block;
-                margin-left: 10px;
-                text-indent: 30px;
-                font-size: large;
-            }
-            .branco {
-                padding-left: 100px;
-            }
-            </style>
-            
+        <link rel="stylesheet" href="styles.css">
     </head>
     <body>
         <span><h1>Estufa Automatizada</h1></span>
+        <ul class="menu">
+            <li><a href="homeHorta.html">Home</a></li>
+            <li>
+              <a href="#">Configurações</a>
+              <ul class="submenu">
+                <li><a href="ConfigControlador.html">Controlador</a></li>
+                <li><a href="#">Config. Sensores</a></li>
+                <li><a href="#">Calibração Sensores</a></li>
+                <li><a href="#">Calibração Atuadores</a></li>
+                <li><a href="#">Log</a></li>
+              </ul>
+            </li>
+            <li><a href="#">Log</a></li>
+            <li><a href="#">Reiniciar</a></li>
+        </ul>
 
-        <span class="dotgreen">Conexão</span><span class="branco"></span><span class="dotgreen">Irmão</span><span class="branco"> </span><span class="dotgreen">Genérico</span>
-        <br>
-        <br>
-        <br>
-        NomeControlador
-        <br>
-        <br>
-        <br>
+        <div class="space-before"></div>
+        
+        <span class="dotgreen">Conexão</span><span class="branco"></span><span class="dotred">Irmão</span><span class="branco"> </span><span class="dotgreen">Genérico</span>
+        
+        <div class="space-before"></div>
+        <div class="controller-info">
+            <div class="controller-name">NOME_CONTROLADOR</div>
+            <div class="network-info">
+                Rede conectada: NOME_REDE<br>
+                IP: ENDERECO_IP
+            </div>
+        </div>
 
-        <span>Sensor: </span><span>Umidade N </span><span class = "LetraBVerde">ESTADO_ATUAL</span>
+        <div class="status">
+            <label for="estado" style="font-weight: bold;">Colheita:</label>
+            <span id="estado">NOME_COLHEITA</span>
+        </div>
+        <br>
+        <div class="container">
+            <div class="container-header">
+                <h2 class="container-header-text">Sensores</h2>
+            </div>
+            <div class="status">
+                <label for="sensor">Sensor</label>
+                <span id="sensor">NOME</span>
+                <div class="substatus">
+                    <div class="status">
+                        <label for="tipo">Tipo:</label>
+                        <span id="tipo">TIPO</span>
+                    </div>
+                    <div class="status">
+                        <label for="valor">Valor:</label>
+                        <span id="valor">Valor</span>
+                    </div>
+                    <div class="status">
+                        <label for="estado">Estado Atual:</label>
+                        <span id="estado">ESTADO_ATUAL</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </body>
 </html>

@@ -1,0 +1,226 @@
+body{
+    background-color: #222;
+    font-family: sans-serif;
+    color: white;
+}
+.form-field{
+    margin: 10px;
+    display: inline-block;
+    vertical-align: top;
+}
+.form-label-rede{
+    display: inline-block;
+    padding: 12px;
+    width: 30px;
+}
+.form-label-sensAtua{
+    display: inline-block;
+    padding: 12px;
+    width: 170px;
+}
+.form-label-configSensor{
+    display: inline-block;
+    padding: 12px;
+    width: 125px;
+}
+.form-label-configSensor-Acio{
+    display: inline-block;
+    padding: 12px;
+    width: 225px;
+}
+.form-dropdown {
+    margin-left: 10px;
+    padding: 5px;
+}
+.submit-button{
+    padding: 10px 20px;
+    background-color: #333;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.submit-button:hover{
+    background-color: #555;
+}
+#DadosRede{
+    display: inline-block;
+}
+h1{
+    color: white;
+    font-weight: bold;
+    text-decoration: underline;
+    text-align: center;
+    padding-top: 15px;
+}
+.LetraBVerde{
+    color: green;
+    font-weight: bold;
+
+}
+.LetraBAmarelo{
+    color: yellow;
+    font-weight: bold;
+
+}
+.LetraBVermelho{
+    color: red;
+    font-weight: bold;
+
+}
+.dotgreen {
+    height: 25px;
+    width: 25px;
+    background-color: green;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 10px;
+    text-indent: 30px;
+    font-size: large;
+    color: white;
+}
+.dotred {
+    height: 25px;
+    width: 25px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 10px;
+    text-indent: 30px;
+    font-size: large;
+    color: white;
+}
+.branco {
+    padding-left: 100px;
+}
+/* Estilo para a barra de menu */
+.menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+    overflow: hidden;
+}
+
+/* Estilo para os itens do menu */
+.menu li {
+    float: left;
+}
+
+/* Estilo para os links do menu */
+.menu li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Estilo para os links do menu quando passar o mouse sobre eles */
+.menu li a:hover {
+    background-color: #111;
+}
+
+/* Estilo para o submenu */
+.submenu {
+    display: none;
+    position: absolute;
+    background-color: #444;
+    z-index: 1;
+}
+
+/* Estilo para os itens do submenu */
+.submenu li {
+    float: none;
+}
+
+/* Estilo para os links do submenu */
+.submenu li a {
+    padding: 10px 16px;
+}
+
+/* Mostrar o submenu ao passar o mouse sobre o item de menu "Configurações" */
+.menu li:hover .submenu {
+    display: block;
+}
+
+/* Estilo para os campos de status */
+.status {
+    margin: 10px;
+}
+
+/* Estilo para os rótulos */
+.status label {
+    display: inline-block;
+    width: 100px; /* Largura do rótulo */
+}
+
+/* Estilo para os valores */
+.status span {
+    display: inline-block;
+    background-color: #333; /* Cor de fundo para simular uma caixa de texto */
+    color: #FFF; /* Cor do texto branco */
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+/* Estilo para os campos de sub-status */
+.substatus {
+    margin-left: 20px; /* Identação em relação ao campo de status pai */
+}
+/* Estilo para a div do controlador */
+.controller-info {
+    margin: 10px;
+    background-color: #333; /* Cor de fundo diferente */
+    padding: 10px; /* Espaçamento interno */
+    border-radius: 10px; /* Borda arredondada */
+}
+
+/* Estilo para o nome do controlador (negrito) */
+.controller-name {
+    font-weight: bold;
+}
+
+/* Estilo para o nome da rede e o IP */
+.network-info {
+    margin-top: 5px;
+    margin-left: 20px; /* Identação em relação ao campo pai */
+    line-height: 1.5;
+}
+.space-before {
+     margin-bottom: 20px; /* Adiciona 20 pixels de espaço antes da div controller-info */
+}
+/* Estilo para a div que envolve os status dos sensores */
+.container {
+    border: 2px solid #FFF; /* Borda de 2 pixels sólida branca */
+    border-radius: 10px; /* Borda arredondada */
+    padding: 10px; /* Espaçamento interno */
+    position: relative; /* Para posicionamento absoluto do cabeçalho */
+}
+.subcontainer {
+    border: 1px solid gray; /* Borda de 2 pixels sólida branca */
+    border-radius: 10px; /* Borda arredondada */
+    padding: 10px; /* Espaçamento interno */
+    position: relative; /* Para posicionamento absoluto do cabeçalho */
+}
+/* Estilo para o cabeçalho "Sensores" */
+.container-header {
+    position: absolute; /* Posicionamento absoluto */
+    top: -13px; /* Deslocamento para cima */
+    left: 10px; /* Distância da borda esquerda */
+    background-color: #222; /* Cor de fundo */
+    padding: 0 10px; /* Espaçamento interno */
+    font-size: 12px;
+}
+.subcontainer-header {
+    position: absolute; /* Posicionamento absoluto */
+    top: -13px; /* Deslocamento para cima */
+    left: 10px; /* Distância da borda esquerda */
+    background-color: #222; /* Cor de fundo */
+    padding: 0 10px; /* Espaçamento interno */
+    font-size: 12px;
+    font-weight: normal;
+}
+/* Estilo para o texto do cabeçalho */
+.container-header-text {
+    margin: 0; /* Remove margens padrão */
+}

@@ -10,20 +10,21 @@
     <span><h1>Estufa Automatizada</h1></span>   
 
     <ul class="menu">
-        <li><a href="homeHorta.html">Home</a></li>
-        <li>
-          <a href="#">Configurações</a>
-          <ul class="submenu">
-            <li><a href="ConfigControlador.html">Controlador</a></li>
-            <li><a href="#">Config. Sensores</a></li>
-            <li><a href="#">Calibração Sensores</a></li>
-            <li><a href="#">Calibração Atuadores</a></li>
-            <li><a href="#">Log</a></li>
-          </ul>
-        </li>
-        <li><a href="#">Log</a></li>
-        <li><a href="#">Reiniciar</a></li>
-    </ul>
+            <li><a href="homeHorta.html">Home</a></li>
+            <li>
+              <a href="#">Configurações</a>
+              <ul class="submenu">
+                <li><a href="ConfigControlador.html">Controlador</a></li>
+                <li><a href="configSensores.html">Config. Sensores</a></li>
+                <li><a href="calibraSensor.html">Calibração Sensores</a></li>
+                <li><a href="calibraAtuador.html">Calibração Atuadores</a></li>
+                <li><a href="configLog.html">Log</a></li>
+              </ul>
+            </li>
+            <li><a href="log.html">Log</a></li>
+            <li><a href="#">Reiniciar</a></li>
+            <li><a href="ajuda.html">Ajuda</a></li>
+        </ul>
     <div class="space-before"></div>
     
     <div class="container">
@@ -78,28 +79,13 @@
                     <input type="text" id="valorMax" name="valorMax" placeholder="Valor Máximo" class="form-field">
                 </div>
                 <br>
-                <div class="form-field">
+                <dsiv class="form-field">
                     <label for="valorMax" class="form-label-configSensor">Real:</label>
                     <input type="text" id="valorMax" name="valorMax" placeholder="Valor Máximo" class="form-field">
                     </div>
             </div>
             <br>
-            <div class="space-before"></div>
-            <div class="subcontainer">
-                <div class="subcontainer-header">
-                    <div class="container-header-text">Valor Acionamento:</div>
-                </div>    
-                <div class="form-field">
-                    <label for="valorAcionamentoSubida" class="form-label-configSensor">Subida:</label>
-                    <input type="text" id="valorAcionamentoSubida" name="valorAcionamentoSubida" placeholder="Valor de Acionamento Subida" class="form-field">
-                </div>
-                <br>
-                <div class="form-field">
-                    <label for="valorAcionamentoDescida" class="form-label-configSensor">Descida:</label>
-                    <input type="text" id="valorAcionamentoDescida" name="valorAcionamentoDescida" placeholder="Valor de Acionamento Descida" class="form-field">
-                </div>
-            </div>
-            <br>
+
             <button type="submit" class="btn">Salvar</button>
         </form>
     </div>

@@ -33,14 +33,15 @@
               <a href="#">Configurações</a>
               <ul class="submenu">
                 <li><a href="ConfigControlador.html">Controlador</a></li>
-                <li><a href="#">Config. Sensores</a></li>
-                <li><a href="#">Calibração Sensores</a></li>
-                <li><a href="#">Calibração Atuadores</a></li>
-                <li><a href="#">Log</a></li>
+                <li><a href="configSensores.html">Config. Sensores</a></li>
+                <li><a href="calibraSensor.html">Calibração Sensores</a></li>
+                <li><a href="calibraAtuador.html">Calibração Atuadores</a></li>
+                <li><a href="configLog.html">Log</a></li>
               </ul>
             </li>
-            <li><a href="#">Log</a></li>
+            <li><a href="log.html">Log</a></li>
             <li><a href="#">Reiniciar</a></li>
+            <li><a href="ajuda.html">Ajuda</a></li>
         </ul>
 
         <div class="space-before"></div>
@@ -61,6 +62,12 @@
                 <div class="form-field">
                     <label for="nome" class="form-label-rede">Nome:</label>
                     <input type="text" id="nome" name="nome" placeholder="VALOR_NOME" class="form-field">
+                    <br>
+                    <label for="hora" class="form-label-rede">Hora:</label>
+                    <input type="time" id="hora" name="hora" class="form-field">
+                    <br>
+                    <label for="data" class="form-label-rede">Hora:</label>
+                    <input type="date" id="data" name="data" class="form-field">
                     <br>
                     <button class="submit-button" type="button" onclick="enviarDados()">Salvar</button>
                 </div>

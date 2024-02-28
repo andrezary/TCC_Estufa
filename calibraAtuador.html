@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulário do Sensor</title>
     <link rel="stylesheet" href="styles.css">
+    <script>
+      // Função para habilitar/desabilitar a caixa de texto com base no estado da checkbox
+      function toggleTextBox() {
+        var checkbox = document.getElementById("chkTimeout");
+        var textBox = document.getElementById("txtTimeout");
+      
+        // Se a checkbox estiver marcada, habilita a caixa de texto; caso contrário, desabilita
+        if (checkbox.checked) {
+          textBox.disabled = false;
+        } else {
+          textBox.disabled = true;
+        }
+      }
+      </script>
 </head>
 <body>
     <span><h1>Estufa Automatizada</h1></span>   
@@ -25,6 +39,53 @@
             <li><a href="#">Reiniciar</a></li>
             <li><a href="ajuda.html">Ajuda</a></li>
         </ul>
+    <div class="space-before"></div>
+    <div class="container">
+      <div class="container-header">
+          <h3 class="container-header-text">Atuador X</h3>
+      </div>
+      <form id="formularioSensor">
+          <div class="form-field">
+            <label for="nomeAtuador" class="form-label-longo">Nome do Sensor:</label>
+            <input type="text" id="nomeAtuador" name="nomeAtuador" placeholder="NOME_ATUADOR" class="form-field">
+          </div>
+          <br>
+          <div class="form-field">
+            <label for="tipoAtuador" class="form-label-longo">Tipo do Sensor:</label>
+            <select id="tipoAtuador" name="tipoAtuador" class="form-dropdown">
+                <option value="Linear">Linear</option>
+                <option value="OnOff">On/Off</option>
+            </select>
+          </div>
+          <br>
+          <div class="form-field">
+            <label class="form-label-longo">Estado Atual:</label>
+            <label id="estadoAtual" class="form-label-longo">N/A</label>
+            <button type="button" class="button" style="margin-left: 42px;">Atualizar</button>
+          </div>
+          <br>
+          <div class="form-field">
+            <label for="valorForce" class="form-label-longo">Forçar estado:</label>
+            <input type="text" id="valorForce" name="valorForce" placeholder="VALOR_FORCADO" class="form-field">
+            <button type="button" class="button">Forçar</button>
+          </div>
+          <br>  
+          <div class="form-field">
+            <label for="atuadorMin" class="form-label-longo">Mínimo atuador:</label>
+            <input type="text" id="atuadorMin" name="atuadorMin" placeholder="MIN_ATUADOR" class="form-field">
+          </div>
+          <br>
+          <div class="form-field">
+            <label for="atuadorMin" class="form-label-longo">Mínimo atuador:</label>
+            <input type="text" id="atuadorMin" name="atuadorMin" placeholder="MIN_ATUADOR" class="form-field">
+          </div>
+          <br>
+          <input type="checkbox" id="chkTimeout" class="form-label-medio" onchange="toggleTextBox()">
+          <label for="chkTimeout">Controle de Timeout</label>
+          <input type="text" id="txtTimeout" class="form-field" placeholder="Insira o valor de timeout" disabled>
+          <br>
+          <br>
+      </form>
     <div class="space-before"></div>
 </body>
 </html>

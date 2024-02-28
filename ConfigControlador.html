@@ -60,54 +60,62 @@
             </div>
             <form id="DadosControlador">
                 <div class="form-field">
-                    <label for="nome" class="form-label-rede">Nome:</label>
+                    <label for="nome" class="form-label-medio">Nome:</label>
                     <input type="text" id="nome" name="nome" placeholder="VALOR_NOME" class="form-field">
                     <br>
-                    <label for="hora" class="form-label-rede">Hora:</label>
+                    <label for="nomeColheita" class="form-label-medio">Colheita:</label>
+                    <input type="text" id="nomeColheita" name="nomeColheita" placeholder="NOME_COLHEITA" class="form-field">
+                    <br>
+                    <label for="hora" class="form-label-medio">Hora:</label>
                     <input type="time" id="hora" name="hora" class="form-field">
                     <br>
-                    <label for="data" class="form-label-rede">Hora:</label>
+                    <label for="data" class="form-label-medio">Data:</label>
                     <input type="date" id="data" name="data" class="form-field">
                     <br>
-                    <button class="submit-button" type="button" onclick="enviarDados()">Salvar</button>
+                    <div class="space-before"></div>
+                    <label for="sync" class="form-label-x-longo">Sincronizar com servidor:</label>
+                    <br>
+                    <input type="text" id="sync" name="sync" class="form-field">
+                    <button class="button" type="button" onclick="enviarDados()">Sincronizar</button>
+                    <br>
+                    <div class="space-before"></div>
+                    <button class="button" type="button" onclick="enviarDados()">Salvar</button>
                 </div>
             </form>
         </div>
-
         <div class="space-before"></div>
-
         <div class="container">
             <div class="container-header">
                 <h2 class="container-header-text">Rede Externa</h2>
             </div>
-            <form id="DadosRede">
+            <form id="DadosRedeExterna">
                 <div class="form-field">
-                    <label for="ssid" class="form-label-rede">SSID:</label>
+                    <label for="ssid" class="form-label-curto">SSID:</label>
                     <input type="text" id="ssid" name="ssid" placeholder="VALOR_SSID" class="form-field">
                     <br>
-                    <label for="senha" class="form-label-rede">Senha:</label>
+                    <label for="senha" class="form-label-curto">Senha:</label>
                     <input type="text" id="senha" name="ssid" placeholder="VALOR_SENHA" class="form-field">
                     <br>
-                    <button class="submit-button" type="button" onclick="enviarDados()">Salvar</button>
+                    <div class="space-before"></div>
+                    <button class="button" type="button" onclick="enviarDados()">Salvar</button>
                 </div>
             </form>
         </div>
-
         <div class="space-before"></div>
-
         <div class="container">
             <div class="container-header">
                 <h2 class="container-header-text">Rede Interna</h2>
             </div>
             <form id="DadosRedeInterna">
                 <div class="form-field">
-                    <label for="ssid_esp" class="form-label-rede">SSID:</label>
+                    <label for="ssid_esp" class="form-label-curto">SSID:</label>
                     <input type="text" id="ssid_esp" name="ssid_esp" placeholder="VALOR_SSID_ESP" class="form-field">
                     <br>
-                    <label for="senha_esp" class="form-label-rede">Senha:</label>
+                    <label for="senha_esp" class="form-label-curto">Senha:</label>
                     <input type="text" id="senha_esp" name="ssid_esp" placeholder="VALOR_SENHA_ESP" class="form-field">
                     <br>
-                    <button class="submit-button" type="button" onclick="enviarDados()">Salvar</button>
+                    <div class="space-before"></div>
+                    <button class="button" type="button" onclick="enviarDados()">Salvar</button>
                 </div>
             </form>
         </div>
@@ -120,24 +128,25 @@
             </div>
             <form id="DadosSensores">
                 <div class="form-field">
-                    <label for="qtdSense" class="form-label-sensAtua">Quantidade sensores:</label>
+                    <label for="qtdSense" class="form-label-x-longo">Quantidade sensores:</label>
                     <input type="text" id="qtdSense" name="qtdSense" placeholder="QTD_SENSORES" class="form-field">
                     <br>
-                    <label for="portaSense" class="form-label-sensAtua">Porta inicial:</label>
+                    <label for="portaSense" class="form-label-x-longo">Porta inicial:</label>
                     <input type="text" id="portaSense" name="portaSense" placeholder="PORTA_SENSORES" class="form-field">
                     <br>
                     <br>
-                    <label for="qtdAtua" class="form-label-sensAtua">Quantidade atuadores:</label>
+                    <label for="qtdAtua" class="form-label-x-longo">Quantidade atuadores:</label>
                     <input type="text" id="qtdAtua" name="qtdAtua" placeholder="QTD_ATUADORES" class="form-field">
                     <br>
-                    <label for="portaAtua" class="form-label-sensAtua">Porta inicial:</label>
+                    <label for="portaAtua" class="form-label-x-longo">Porta inicial:</label>
                     <input type="text" id="portaAtua" name="portaAtua" placeholder="PORTA_ATUADORES" class="form-field">
                     <br>
                     <br>
-                    <label for="amostragem" class="form-label-sensAtua">Tempo de amostragem:</label>
+                    <label for="amostragem" class="form-label-x-longo">Tempo de amostragem:</label>
                     <input type="text" id="amostragem" name="amostragem" placeholder="AMOSTRAGEM" class="form-field">
                     <br>
-                    <button class="submit-button" type="button" onclick="enviarDados()">Salvar</button>
+                    <div class="space-before"></div>
+                    <button class="button" type="button" onclick="enviarDados()">Salvar</button>
                 </div>
             </form>
         </div>

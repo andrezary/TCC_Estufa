@@ -33,12 +33,12 @@
         </div>
         <form id="formularioSensor">
             <div class="form-field">
-                <label for="nomeSensor" class="form-label-configSensor">Nome do Sensor:</label>
+                <label for="nomeSensor" class="form-label-longo">Nome do Sensor:</label>
                 <input type="text" id="nomeSensor" name="nomeSensor" placeholder="NOME_SENSOR" class="form-field">
             </div>
             <br>
             <div class="form-field">
-                <label for="tipoSensor" class="form-label-configSensor">Tipo do Sensor:</label>
+                <label for="tipoSensor" class="form-label-longo">Tipo do Sensor:</label>
                 <select id="tipoSensor" name="tipoSensor" class="form-dropdown">
                     <option value="Temperatura">Temperatura</option>
                     <option value="Umidade">Umidade</option>
@@ -49,14 +49,14 @@
             <br>
             <div class="form-field">
             <label class="form-label-configSensor">Valor Atual:</label>
-            <label id="valorAtual" class="form-label-configSensor">N/A</label>
-            <button type="button" class="btn">Atualizar</button>
+            <label id="valorAtual" class="form-label-longo">N/A</label>
+            <button type="button" class="button" style="margin-left: 37px;">Atualizar</button>
             </div>
             <br>
             <div class="form-field">
-                <label for="valorForce" class="form-label-configSensor">Forçar leitura:</label>
+                <label for="valorForce" class="form-label-longo">Forçar leitura:</label>
                 <input type="text" id="valorForce" name="valorForce" placeholder="VALOR_FORCADO" class="form-field">
-                <button type="button" class="btn">Forçar</button>
+                <button type="button" class="button">Forçar</button>
             </div>
             <br>
             <div class="space-before"></div>
@@ -65,17 +65,17 @@
                     <div class="container-header-text">Valor Acionamento:</div>
                 </div>    
                 <div class="form-field">
-                    <label for="valorAcionamentoSubida" class="form-label-configSensor">Subida:</label>
+                    <label for="valorAcionamentoSubida" class="form-label-medio">Subida:</label>
                     <input type="text" id="valorAcionamentoSubida" name="valorAcionamentoSubida" placeholder="Valor de Acionamento Subida" class="form-field">
                 </div>
                 <br>
                 <div class="form-field">
-                    <label for="valorAcionamentoDescida" class="form-label-configSensor">Descida:</label>
+                    <label for="valorAcionamentoDescida" class="form-label-medio">Descida:</label>
                     <input type="text" id="valorAcionamentoDescida" name="valorAcionamentoDescida" placeholder="Valor de Acionamento Descida" class="form-field">
                 </div>
                 <br>
                 <div class="form-field">
-                    <label for="atuador" class="form-label-configSensor">Aciona:</label>
+                    <label for="atuador" class="form-label-medio">Aciona:</label>
                     <select id="tipoSensor" name="atuador" class="form-dropdown">
                         <option value="Atuador 1">Atuador 1</option>
                         <option value="Atuador 2">Atuador 2</option>
@@ -83,13 +83,13 @@
                         <option value="Atuador 4">Atuador 4</option>
                     </select>
                     <br>
-                    <input type="checkbox" name="reverso" id="reverso" class="form-label-configSensor" value="sim">
-                    <label for="reverso" class="form-label-configSensor">Ação reversa</label>
+                    <input type="checkbox" name="reverso" id="reverso" class="form-label-medio" value="sim">
+                    <label for="reverso" class="form-label-longo">Ação reversa</label>
                 </div>
             </div>
             <br>
             
-            <button type="submit" class="btn">Salvar</button>
+            <button type="submit" class="button">Salvar</button>
         </form>
     </div>
 

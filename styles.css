@@ -284,6 +284,16 @@ h1{
     transform: translateX(-50%);
   }
   
+  .question-mark {
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .tooltip:hover .question-mark {
+    background-color: #ccc;
+  }
   /* Mostrar o tooltip quando o mouse passa por cima */
   .tooltip:hover .tooltiptext {
     visibility: visible;

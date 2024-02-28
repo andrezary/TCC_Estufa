@@ -6,12 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Formulário do Sensor</title>
   <link rel="stylesheet" href="styles.css">
-  <script>
-    function toggleTooltip(elem) {
-      var tooltip = elem.nextElementSibling;
-      tooltip.style.visibility = tooltip.style.visibility === "visible" ? "hidden" : "visible";
-    }
-  </script>
+  
 </head>
 
 <body>
@@ -45,8 +40,11 @@
     <div class="form-field">
       <label class="form-label-xx-longo">Tempo de intervalo entre envios:</label>
       <input type="text" id="tempoIntervalo" class="form-field" placeholder="Insira o tempo em minutos">
-      <span class="tooltipicon" onclick="toggleTooltip(this)">?</span>
-      <span class="tooltiptext">Insira o tempo em minutos</span>
+      <span class="tooltip">
+        
+        <span class="question-mark" onclick="toggleTooltip(this)">?</span>
+        <span class="tooltiptext">Insira o tempo em minutos</span>
+      </span>
     </div>
     <br>
     <div class="form-field">
@@ -94,6 +92,12 @@
       </div>
     </div>
   </div>
+  <script>
+    function toggleTooltip(elem) {
+      var tooltip = elem.nextElementSibling;
+      tooltip.style.visibility = tooltip.style.visibility === "visible" ? "hidden" : "visible";
+    }
+  </script>
 </body>
 
 </html>

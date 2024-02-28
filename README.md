@@ -1,5 +1,5 @@
 # Cronograma de execução:
-Geral
+## Geral
 |Data      | Atividade                                           |
 |----------|-----------------------------------------------------|
 05/01/2024 | Inicio do desenvolvimento da UI para guiar Features
@@ -11,5 +11,4 @@ Geral
 27/02/2024 | Ainda trabalhando na UI
 28/02/2024 | Ainda trabalhando na UI
 28/02/2024 | Trabalhando na lista de hardware
-|---------------------------------------------------------------|
 

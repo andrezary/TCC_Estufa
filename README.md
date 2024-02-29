@@ -11,4 +11,4 @@
 27/02/2024 | Ainda trabalhando na UI
 28/02/2024 | Ainda trabalhando na UI
 28/02/2024 | Trabalhando na lista de hardware
-
+28/02/2024 | Desenvolvendo o Web Server, erro de rebooting encontrado

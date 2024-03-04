@@ -4,6 +4,22 @@
 #include <String.h>
 #include <ESPmDNS.h>
 
+#define DEBUG_MODE
+
+#ifdef DEBUG_MODE
+  #define DEBUG(texto)    Serial.println(texto)
+#else
+  #define DEBUG(texto)    
+#endif
+
+#ifndef SILENT_MODE
+  #define PRINTLN(texto)  Serial.println(texto)
+  #define PRINT(texto)    Serial.print(texto)
+#else
+  #define PRINTLN(texto) 
+  #define PRINT(texto)
+#endif 
+
 // Nome do Hostname
 const char *hostname = "estufa-webserver";
 
@@ -18,9 +34,15 @@ const char *passwordAP = "EstufaAuto";
 // Cria um objeto WebServer
 WiFiServer server(80);
 
+void WiFiReconnect(){
+  PRINTLN("WiFi desconectado, tentando reconectar...");
+  setupWifi();
+}
+
 void setupWifi() {
   bool conectado = false;
-  // Set o hostname para ser mais facil conectar via navegador
+  PRINTLN("Configurando Wifi");
+  // Set o hostname para identificação na rede
   WiFi.setHostname(hostname);
 
   // Tenta conectar na rede fornecida
@@ -28,23 +50,26 @@ void setupWifi() {
   WiFi.begin(ssid, password);
 
   // Verifica se conseguiu entrar
-  Serial.println(String("Tentando conectar em ") + ssid);
+  DEBUG(String("Tentando conectar em ") + ssid);
   for (int i = 0; i < 10; i++) {
     //Se conectado termina a função
     if (WiFi.status() == WL_CONNECTED) {
       conectado = true;
-      Serial.println(WiFi.status());
+      DEBUG("Conectado no wifi");
+      PRINT("IP address: ");
+      PRINTLN(WiFi.localIP());
+      WiFi.onEvent(WiFiReconnect, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
       break;
     }
     //senão timeout
     delay(500);
-    Serial.println(".");
-    Serial.println(i);
+    Serial.print(".");
   }
   
   // se não conectou, tenta criar uma AP
   if (conectado == false)
   {
+    PRINTLN("Wifi não conectado, trocando para modo AP");
     WiFi.mode(WIFI_AP);
     WiFi.softAP(ssidAP, passwordAP);
     Serial.println("IP address:");
@@ -56,7 +81,9 @@ void setupWifi() {
     Serial.println("Erro ao configurar o mDNS");
     return;
   }
-  Serial.println("mDNS configurado");
+  else {
+    Serial.println("mDNS configurado");
+  }
 }
 
 void setup()

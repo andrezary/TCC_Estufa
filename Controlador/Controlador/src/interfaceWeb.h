@@ -1,0 +1,18 @@
+#ifndef INTERFACEWEB_H
+#define INTERFACEWEB_H
+
+#include <unordered_map>
+
+namespace InterfaceWeb
+{
+    using Dictionary = std::unordered_map<const char *, const char *>;
+
+    extern const std::unordered_map<const char *, const char *> styles;
+    extern const std::unordered_map<const char *, const char *> markupPadrao;
+    //const char *homeHeader[];
+
+    void setupServer();
+    void loop();
+}
+
+#endif

@@ -3,7 +3,7 @@
 
 namespace sensors
 {
-    enum tipo
+    enum Tipo
     {
         temperatura,
         umidade,
@@ -27,7 +27,7 @@ namespace sensors
         RegressaoLinear(/* args */);
         ~RegressaoLinear();
     };
-    
+
     class RegressaoSimples : public calibracao
     {
     private:
@@ -36,7 +36,7 @@ namespace sensors
         RegressaoSimples(/* args */);
         ~RegressaoSimples();
     };
-    
+
     class RegressaoTrechos : public calibracao
     {
     private:
@@ -45,17 +45,44 @@ namespace sensors
         RegressaoTrechos(/* args */);
         ~RegressaoTrechos();
     };
-    
+
     class Sensor
     {
-        String name;
-        tipo tipo;
-        int porta;
-        calibracao calib;
-
     private:
+        String name;
+        Tipo tipo;
+        int porta;
+        calibracao* calib;
+        bool estadoAcionador;
+        int portaAcionador;
+        int valorSubida;
+        int valorDescida;
+
         /* data */
     public:
+        String getName();
+        void setName(const char *str);
+
+        Tipo getTipo();
+        void setTipo(Tipo type);
+
+        int getPorta();
+        void setPorta(int value);
+
+        int getValor();
+        int getRawValue();
+        void setRawValue(int value);
+        void setValor(int value);
+        
+        bool getEstadoAcionador();
+        int getPortaAcionador();
+        void setPortaAcionador(int value);
+
+        int getValorSubida();
+        int getValorDescida();
+        void setValorSubida(int value);
+        void setValorDescida(int value);
+
         Sensor(/* args */);
         ~Sensor();
     };

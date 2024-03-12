@@ -5,7 +5,6 @@
 
 namespace InterfaceWeb
 {
-    
     const Dictionary markupPadrao =
         {
             /*Header padrão*/

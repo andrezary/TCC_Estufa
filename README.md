@@ -1,3 +1,26 @@
+# **Metas**
+|Data     | Meta | Status|
+|---------|------|-------|
+28/fev|Definir a interface gráfica dos ESP32
+15/mar	Desenvolver interface gráfica no ESP32
+20/mar	Preparação do sistema do Raspberry
+22/mar	Definir a interface gráfica do Raspberry
+12/abr	Desenvolver interface gráfica do Raspberry
+12/abr	Desenvolvimento do controlador
+31/mar	Definir plantio
+19/abr	Resolução de bugs entre Inteface e controlador
+26/abr	Construção do eletrônico em bancada
+03/mai	Teste do controlador em bancada
+13/mai	Desenvolvimento do banco de dados
+21/mai	Testes de comunicação entre os Esp32 e casos de falha
+13/mai	Teste do controlador com prototipo
+	Teste do controlador em campo
+	Teste de falhas de comunicação entre os dispositivos
+
+
+:heavy_check_mark:
+:white_check_mark:
+
 # **Cronograma de execução:**
 ## Geral
 |Data      | Atividade                                           |

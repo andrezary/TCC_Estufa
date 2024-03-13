@@ -7,5 +7,6 @@ namespace configs
 {
     String getNomeControlador();
     String getColheita();
+    void resetESP32();
 }
 #endif

@@ -10,4 +10,8 @@ namespace configs
     {
         return "configs::Colheita";
     }
+    void resetESP32()
+    {
+        ;
+    }
 }

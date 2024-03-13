@@ -1,4 +1,6 @@
+#include <Arduino.h>
 #include "configs.h"
+#include "common.h"
 
 namespace configs
 {
@@ -12,6 +14,8 @@ namespace configs
     }
     void resetESP32()
     {
-        ;
+        PRINTLN("Reiniciando o ESP32 via solicitação WEB!");
+        ESP.restart();
+        delay(1000);
     }
 }

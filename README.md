@@ -2,8 +2,8 @@
 |Data     | Meta                                                       | Status |
 |---------|------------------------------------------------------------|--------|
 28/fev    | Definir a interface gráfica dos ESP32		       |:heavy_check_mark:
-15/mar	  | Desenvolver interface gráfica no ESP32		       |:heavy_check_mark:	
-20/mar	  | Preparação do sistema do Raspberry		       	       |:white_check_mark:	
+15/mar	| Desenvolver interface gráfica no ESP32		       |:heavy_check_mark:	
+20/mar	| Preparação do sistema do Raspberry		       	       |:white_check_mark:	
 22/mar    | Definir a interface gráfica do Raspberry		       |	
 12/abr    | Desenvolver interface gráfica do Raspberry		       |	
 12/abr    | Desenvolvimento do controlador	     		       |	
@@ -14,8 +14,8 @@
 13/mai    | Desenvolvimento do banco de dados                          |	
 21/mai    | Testes de comunicação entre os Esp32 e casos de falha      |	
 13/mai    | Teste do controlador com prototipo                         |	
-          | Teste do controlador em campo		               |	
-          | Teste de falhas de comunicação entre os dispositivos       |	
+Sem data  | Teste do controlador em campo		               |	
+Sem data  | Teste de falhas de comunicação entre os dispositivos       |	
 
 
 
@@ -40,3 +40,7 @@
 09/03/2024 | Escolha do RaspBerry
 11/03/2024 | Desenvolvimento do cronograma de metas
 12/03/2024 | Finalizando 90% da interface WebESP32
+13/03/2024 | Finalizado a interface WEB do ESP32, falta fazer os códigos dos botões
+14/03/2024 | Iniciando a construção do Headless do RaspZero
+15/03/2024 | Tentando configurar ainda o Headless
+

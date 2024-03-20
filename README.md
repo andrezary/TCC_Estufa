@@ -2,8 +2,8 @@
 |Data     | Meta                                                       | Status |
 |---------|------------------------------------------------------------|--------|
 28/fev    | Definir a interface gráfica dos ESP32		       |:heavy_check_mark:
-15/mar	| Desenvolver interface gráfica no ESP32		       |:heavy_check_mark:	
-20/mar	| Preparação do sistema do Raspberry		       	       |:white_check_mark:	
+15/mar    | Desenvolver interface gráfica no ESP32		       |:heavy_check_mark:	
+20/mar    | Preparação do sistema do Raspberry		       	       |:white_check_mark:	
 22/mar    | Definir a interface gráfica do Raspberry		       |	
 12/abr    | Desenvolver interface gráfica do Raspberry		       |	
 12/abr    | Desenvolvimento do controlador	     		       |	
@@ -12,12 +12,14 @@
 26/abr    | Construção do eletrônico em bancada			       |      	
 03/mai    | Teste do controlador em bancada			       |	
 13/mai    | Desenvolvimento do banco de dados                          |	
+15/mai    | Entrega do parcial para correções e encaminhamentos |
 21/mai    | Testes de comunicação entre os Esp32 e casos de falha      |	
 13/mai    | Teste do controlador com prototipo                         |	
 Sem data  | Teste do controlador em campo		               |	
 Sem data  | Teste de falhas de comunicação entre os dispositivos       |	
-
-
+14/jun    | Entrega do texto escrito para o orientador    |
+21/jun    | Entrega do texto escrito para a banca  |
+28/jun    | Revisão da apresentação | 
 
 # **Cronograma de execução:**
 ## Geral

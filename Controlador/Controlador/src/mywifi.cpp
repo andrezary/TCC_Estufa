@@ -4,6 +4,7 @@
 #include <String.h>
 #include <ESPmDNS.h>
 
+#include "configs.h"
 #include "mywifi.h"
 #include "common.h"
 
@@ -28,10 +29,12 @@ namespace mywifi
         if(APMode)
         {
             return String(ssidAP);
+            //return Configs::config.getMySSID();
         }
         else
         {
             return String(ssid);
+            //return Configs::config.getSSID();
         }
     }
     

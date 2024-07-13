@@ -4,7 +4,8 @@
 
 #include "interfaceWeb.h"
 #include "mywifi.h"
-
+#include "configs.h"
+#include "Controller.h"
 
 
 void setup()
@@ -14,6 +15,8 @@ void setup()
   // Configura o Wifi
   mywifi::setupWifi();
   InterfaceWeb::setupServer();
+  configs::setupConfigs();
+
 }
 
 void loop()
@@ -21,4 +24,6 @@ void loop()
   delay(100);
   mywifi::WiFiCheck();
   InterfaceWeb::loop();
+  Controller::loop();
+
 }

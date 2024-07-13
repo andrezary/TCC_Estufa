@@ -15,6 +15,7 @@ namespace InterfaceWeb
     ulong previousTime = 0;
     const long timeout = 2000;
     String header;
+    String postBody;
     String output26State = "off";
     String output27State = "off";
     WiFiClient client;
@@ -118,7 +119,7 @@ namespace InterfaceWeb
     {
         client.println("<div class=\"controller-info\">");
         client.println("<div class=\"controller-name\">");
-        client.println(configs::getNomeControlador());
+        client.println(configs::config.getNomeControlador());
         client.println("</div>");
         client.println("<div class=\"network-info\">");
         client.print("Rede conectada: ");
@@ -226,7 +227,7 @@ namespace InterfaceWeb
         client.println("<div class=\"status\">");
         client.println("<label for=\"estado\" style=\"font-weight: bold;\">Colheita:</label>");
         client.print("<span id=\"estado\">");
-        client.print(configs::getColheita());
+        client.print(configs::config.getColheita());
         client.println("</span>");
         client.println("</div>");
         client.println("<div class=\"space-before\"></div>");
@@ -257,6 +258,32 @@ namespace InterfaceWeb
         client.println("</div>");
 
         sendEndPage();
+    }
+
+    void sendScriptConfigControlador()
+    {
+        client.println("<script>");
+        client.println("function enviarDadosRedeExterna() {");
+        client.println("\tvar ssid = document.getElementById(\"ssid\").value;");
+        client.println("\tvar senha = document.getElementById(\"senha\").value;");
+
+        client.println("\tif (ssid.length < 1 || ssid.length > 31) {");
+        client.println("\t\talert(\"O SSID deve ter entre 1 e 31 caracteres.\");");
+        client.println("\treturn;");
+        client.println("\t}");
+        client.println("\tif (senha.length < 8 || senha.length > 63) {");
+        client.println("\t\talert(\"A senha deve ter entre 8 e 63 caracteres.\");");
+        client.println("\treturn;");
+        client.println("\t}");
+
+        client.println("\tvar xhr = new XMLHttpRequest();");
+        client.println("\txhr.open(\"POST\", \"/enviar-dados\", true);");
+        client.println("\txhr.setRequestHeader(\"Content-Type\", \"application/x-www-form-urlencoded\");");
+        client.println("\tvar data = \"RedeExterna\\nssid=\" + encodeURIComponent(ssid) + \"\\nsenha=\" + encodeURIComponent(senha) + \"\\n\";");
+        client.println("\txhr.send(data);");
+        client.println("\talert(\"Dados enviados com sucesso!\");");
+        client.println("}");
+        client.println("</script>");
     }
 
     void sendScriptConfigLog()
@@ -330,10 +357,10 @@ namespace InterfaceWeb
         client.println("<form id=\"DadosControlador\">");
         client.println("<div class=\"form-field\">");
         client.println("<label for=\"nome\" class=\"form-label-medio\">Nome:</label>");
-        client.println("<input type=\"text\" id=\"nome\" name=\"nome\" placeholder=\"VALOR_NOME\" class=\"form-field\">");
+        client.println(String("<input type=\"text\" id=\"nome\" name=\"nome\" placeholder=\"") + configs::config.getNomeControlador() + String("\" class=\"form-field\">"));
         client.println("<br>");
         client.println("<label for=\"nomeColheita\" class=\"form-label-medio\">Colheita:</label>");
-        client.println("<input type=\"text\" id=\"nomeColheita\" name=\"nomeColheita\" placeholder=\"NOME_COLHEITA\" class=\"form-field\">");
+        client.println(String("<input type=\"text\" id=\"nomeColheita\" name=\"nomeColheita\" placeholder=\"") + configs::config.getColheita() + String("\" class=\"form-field\">"));
         client.println("<br>");
         client.println("<label for=\"hora\" class=\"form-label-medio\">Hora:</label>");
         client.println("<input type=\"time\" id=\"hora\" name=\"hora\" class=\"form-field\">");
@@ -361,13 +388,13 @@ namespace InterfaceWeb
         client.println("<form id=\"DadosRedeExterna\">");
         client.println("<div class=\"form-field\">");
         client.println("<label for=\"ssid\" class=\"form-label-curto\">SSID:</label>");
-        client.println("<input type=\"text\" id=\"ssid\" name=\"ssid\" placeholder=\"VALOR_SSID\" class=\"form-field\">");
+        client.println(String("<input type=\"text\" id=\"ssid\" name=\"ssid\" placeholder=\"") + configs::config.getSSID() + String("\" class=\"form-field\">"));
         client.println("<br>");
         client.println("<label for=\"senha\" class=\"form-label-curto\">Senha:</label>");
-        client.println("<input type=\"text\" id=\"senha\" name=\"ssid\" placeholder=\"VALOR_SENHA\" class=\"form-field\">");
+        client.println(String("<input type=\"password\" id=\"senha\" name=\"senha\" placeholder=\"") + configs::config.getPWD() + String("\" class=\"form-field\">"));
         client.println("<br>");
         client.println("<div class=\"space-before\"></div>");
-        client.println("<button class=\"button\" type=\"button\" onclick=\"enviarDados()\">Salvar</button>");
+        client.println("<button class=\"button\" type=\"button\" onclick=\"enviarDadosRedeExterna()\">Salvar</button>");
         client.println("</div>");
         client.println("</form>");
         client.println("</div>");
@@ -423,7 +450,7 @@ namespace InterfaceWeb
         client.println("</div>");
 
         client.println("<div class=\"space-before\"></div>");
-
+        sendScriptConfigControlador();
         sendEndPage();
     }
 
@@ -854,7 +881,84 @@ namespace InterfaceWeb
     {
         sendConstrucao();
     }
-    
+
+    void processPostData(String postBody)
+    {
+        DEBUG("Processing PostData");
+        DEBUG("Mensagem original:");
+        DEBUG(postBody);
+        // void parseMessage(const std::string& message, std::string& chave, std::vector<std::pair<std::string, std::string>>& parametros) {
+        int pos = 0;
+        int endLine;
+
+        // Encontrar a posição da primeira quebra de linha
+        endLine = postBody.indexOf('\n');
+
+        if (endLine == -1)
+        {
+            // Se não houver quebra de linha, retornar
+            DEBUG("Mensagem não compreendida!");
+            return;
+        }
+
+        // Extrair a chave
+        String chave = postBody.substring(0, endLine);
+        String parameters = postBody.substring(endLine + 1);
+        DEBUG("Mensagem tratada:");
+        DEBUG(chave);
+        if (chave == "RedeExterna")
+        {
+            while (parameters.indexOf('\n') != -1)
+            {
+                int endParam = parameters.indexOf('=');
+                endLine = parameters.indexOf('\n');
+                String param = parameters.substring(0, endParam);
+                String value = parameters.substring(endParam + 1, endLine);
+                DEBUG(String("Parametro: ") + param + String(" Valor: ") + value);
+                parameters = parameters.substring(endLine + 1);
+
+                if (param == "ssid")
+                {
+                    configs::config.setSSID(value);
+                }
+                else if (param == "senha")
+                {
+                    configs::config.setPWD(value);
+                }
+            }
+        }
+
+        /*
+        // Iterar sobre as linhas restantes
+        while (true)
+        {
+            // Encontrar a próxima quebra de linha
+            pos = endLine + 1;
+            endLine = message.find('\n', pos);
+
+            // Se não houver mais quebras de linha, parar
+            if (endLine == std::string::npos)
+            {
+                break;
+            }
+
+            // Extrair o parâmetro e valor
+            std::size_t equalsPos = message.find('=', pos);
+            if (equalsPos != std::string::npos && equalsPos < endLine)
+            {
+                std::string parametro = message.substr(pos, equalsPos - pos);
+                std::string valor = message.substr(equalsPos + 1, endLine - equalsPos - 1);
+                parametros.push_back(std::make_pair(parametro, valor));
+            }
+        }
+
+        int startIndex = postBody.indexOf("ssid=");
+        int endIndex = postBody.indexOf("&", startIndex);
+        String ssidValue = postBody.substring(startIndex + 5, endIndex);
+        // Faça o mesmo para outros campos...
+        Serial.println("SSID: " + ssidValue);*/
+    }
+
     void loop()
     {
         // Pega um client que esteja disponivel para atender
@@ -879,6 +983,7 @@ namespace InterfaceWeb
                         if (currentLine.length() == 0)
                         {
                             // Send Home
+                            DEBUG(header);
                             if (header.indexOf("GET /config/controlador") >= 0)
                             {
                                 sendHeader();
@@ -919,6 +1024,19 @@ namespace InterfaceWeb
                             {
                                 sendHeader();
                                 sendHelp();
+                            }
+                            else if (header.indexOf("POST") >= 0)
+                            {
+                                while (client.available())
+                                {
+                                    char c = client.read();
+                                    postBody += c;
+                                }
+                                // Processa os dados do corpo da solicitação POST
+                                if (postBody != "")
+                                {
+                                    processPostData(postBody);
+                                }
                             }
                             else
                             {

@@ -11,11 +11,12 @@
 void setup()
 {
   Serial.begin(115200);
-
+  configs::setupConfigs();
+  
   // Configura o Wifi
   mywifi::setupWifi();
   InterfaceWeb::setupServer();
-  configs::setupConfigs();
+  
 
 }
 

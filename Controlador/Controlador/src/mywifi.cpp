@@ -10,9 +10,6 @@
 
 namespace mywifi
 {
-    // Nome do Hostname
-    const char *hostname = "estufa-webserver";
-
     // SSID e senha da rede Wi-Fi
     const char *ssid = "LaptopDe";
     const char *password = "21021992";
@@ -26,16 +23,7 @@ namespace mywifi
 
     String getSSID()
     {
-        if(APMode)
-        {
-            return String(ssidAP);
-            //return Configs::config.getMySSID();
-        }
-        else
-        {
-            return String(ssid);
-            //return Configs::config.getSSID();
-        }
+        return String(WiFi.SSID());
     }
     
     String getIP()
@@ -49,6 +37,7 @@ namespace mywifi
             return WiFi.localIP().toString();
         }
     }
+    
     void WiFiReconnect(WiFiEvent_t event, WiFiEventInfo_t info)
     {
         PRINTLN("WiFi desconectado, tentando reconectar...");
@@ -79,14 +68,15 @@ namespace mywifi
         bool conectado = false;
         PRINTLN("Configurando Wifi");
         // Set o hostname para identificação na rede
-        WiFi.setHostname(hostname);
+        WiFi.setHostname(HOSTNAME);
 
         // Tenta conectar na rede fornecida
         WiFi.mode(WIFI_STA);
-        WiFi.begin(ssid, password);
+        //WiFi.begin(ssid, password);
+        WiFi.begin(configs::config.getSSID(), configs::config.getPWD());
 
         // Verifica se conseguiu entrar
-        DEBUG(String("Tentando conectar em ") + ssid);
+        DEBUG(String("Tentando conectar em ") + configs::config.getSSID() + " " + configs::config.getPWD());
         for (int i = 0; i < 10; i++)
         {
             // Se conectado termina a função
@@ -118,7 +108,7 @@ namespace mywifi
         }
 
         // Configura o nome de host mDNS
-        if (!MDNS.begin(hostname))
+        if (!MDNS.begin(HOSTNAME))
         {
             Serial.println("Erro ao configurar o mDNS");
             return;

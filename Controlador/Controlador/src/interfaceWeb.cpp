@@ -7,18 +7,31 @@
 #include "configs.h"
 #include "common.h"
 
+/**
+ * Espaço para implementação de dados e funções referentes as
+ * configurações da estufa.
+ */
 namespace InterfaceWeb
 {
-    // Cria um objeto WebServer
+    
+    /**
+     * Variaveis globais para a execução da dinamica da WebUI da estufa
+     */
+    //Cria o servidor Web em si
     WiFiServer server(80);
+    
+    //Variavel que representa o cliente
+    WiFiClient client;
+
+    //Variaveis para controle de tempo de tempo de execução
     ulong currentTime = millis();
     ulong previousTime = 0;
     const long timeout = 2000;
+
+    //Variaveis para a formação das paginas Web
     String header;
     String postBody;
-    String output26State = "off";
-    String output27State = "off";
-    WiFiClient client;
+    
 
     using Dictionary = std::unordered_map<const char *, const char *>;
 
@@ -283,6 +296,70 @@ namespace InterfaceWeb
         client.println("\txhr.send(data);");
         client.println("\talert(\"Dados enviados com sucesso!\");");
         client.println("}");
+
+        ///////////////////////////////////////////////////////////////////////////
+        client.println("function enviarDadosRedeInterna() {");
+        client.println("\tvar ssid = document.getElementById(\"ssid_esp\").value;");
+        client.println("\tvar senha = document.getElementById(\"senha_esp\").value;");
+
+        client.println("\tif (ssid.length < 1 || ssid.length > 31) {");
+        client.println("\t\talert(\"O SSID deve ter entre 1 e 31 caracteres.\");");
+        client.println("\treturn;");
+        client.println("\t}");
+        client.println("\tif (senha.length < 8 || senha.length > 63) {");
+        client.println("\t\talert(\"A senha deve ter entre 8 e 63 caracteres.\");");
+        client.println("\treturn;");
+        client.println("\t}");
+
+        client.println("\tvar xhr = new XMLHttpRequest();");
+        client.println("\txhr.open(\"POST\", \"/enviar-dados\", true);");
+        client.println("\txhr.setRequestHeader(\"Content-Type\", \"application/x-www-form-urlencoded\");");
+        client.println("\tvar data = \"RedeInterna\\nssid_esp=\" + encodeURIComponent(ssid) + \"\\nsenha_esp=\" + encodeURIComponent(senha) + \"\\n\";");
+        client.println("\txhr.send(data);");
+        client.println("\talert(\"Dados enviados com sucesso!\");");
+        client.println("}");
+        //////////////////////////////////////////////////////////////////////////
+
+        client.println("function enviarDadosSensoresAtuadores() {");
+        client.println("\tvar qtdSense = parseInt(document.getElementById(\"qtdSense\").value, 10);");
+        client.println("\tvar portaSense = parseInt(document.getElementById(\"portaSense\").value, 10);");
+        client.println("\tvar qtdAtua = parseInt(document.getElementById(\"qtdAtua\").value, 10);");
+        client.println("\tvar portaAtua = parseInt(document.getElementById(\"portaAtua\").value, 10);");
+        client.println("\tvar amostragem = parseInt(document.getElementById(\"amostragem\").value, 10);");
+
+        client.println("\tif (isNaN(qtdSense) || qtdSense < 0 || qtdSense > 3) {");
+	    client.println("\t\talert(\"Quantidade de sensores inválida!\" + qtdSense);");
+	    client.println("\t\treturn;");
+        client.println("\t}");
+        client.println("\tif (isNaN(portaSense) || portaSense < 32 || portaSense > 32) {");
+	    client.println("\t\talert(\"Endereço porta inicial de sensores inválida!\");");
+	    client.println("\t\treturn;");
+        client.println("\t}");
+        client.println("\tif (isNaN(qtdAtua) || qtdAtua < 0 || qtdAtua > 32) {");
+	    client.println("\t\talert(\"Quantidade de atuadores inválida!\");");
+	    client.println("\t\treturn;");
+        client.println("\t}");
+        client.println("\tif (isNaN(portaAtua) || portaAtua < 0 || portaAtua > 36) {");
+        client.println("\t\talert(\"Endereço porta inicial de atuadores inválida!\");");
+        client.println("\treturn;");
+        client.println("\t}");
+        client.println("\tif (isNaN(amostragem) || amostragem < 0 || amostragem > 2000) {");
+        client.println("\t\talert(\"Tempo de amostragem inválido!\");");
+        client.println("\treturn;");
+        client.println("\t}");
+
+        client.println("\tvar xhr = new XMLHttpRequest();");
+        client.println("\txhr.open(\"POST\", \"/enviar-dados\", true);");
+        client.println("\txhr.setRequestHeader(\"Content-Type\", \"application/x-www-form-urlencoded\");");
+        client.println("\tvar data = \"SensoresAtuadores\\nqtdSense=\" + encodeURIComponent(qtdSense) + \"\\nportaSense=\" + encodeURIComponent(portaSense) + \"\\n\";");
+        //client.println("\txhr.send(data);");
+        client.println("\tdata = data + \"qtdAtua=\" + encodeURIComponent(qtdAtua) + \"\\nportaAtua=\" + encodeURIComponent(portaAtua) + \"\\n\";");
+        //client.println("\txhr.send(data);");
+        client.println("\tdata = data + \"amostragem=\" + encodeURIComponent(amostragem) + \"\\n\";");
+        client.println("\txhr.send(data);");
+        client.println("\talert(\"Dados enviados com sucesso!\");");
+        client.println("}");
+        ////////////////////////////////////////////////////////////////////////
         client.println("</script>");
     }
 
@@ -391,7 +468,7 @@ namespace InterfaceWeb
         client.println(String("<input type=\"text\" id=\"ssid\" name=\"ssid\" placeholder=\"") + configs::config.getSSID() + String("\" class=\"form-field\">"));
         client.println("<br>");
         client.println("<label for=\"senha\" class=\"form-label-curto\">Senha:</label>");
-        client.println(String("<input type=\"password\" id=\"senha\" name=\"senha\" placeholder=\"") + configs::config.getPWD() + String("\" class=\"form-field\">"));
+        client.println(String("<input type=\"password\" id=\"senha\" name=\"senha\" placeholder=\"") + configs::config.getPWDHided() + String("\" class=\"form-field\">"));
         client.println("<br>");
         client.println("<div class=\"space-before\"></div>");
         client.println("<button class=\"button\" type=\"button\" onclick=\"enviarDadosRedeExterna()\">Salvar</button>");
@@ -407,13 +484,13 @@ namespace InterfaceWeb
         client.println("<form id=\"DadosRedeInterna\">");
         client.println("<div class=\"form-field\">");
         client.println("<label for=\"ssid_esp\" class=\"form-label-curto\">SSID:</label>");
-        client.println("<input type=\"text\" id=\"ssid_esp\" name=\"ssid_esp\" placeholder=\"VALOR_SSID_ESP\" class=\"form-field\">");
+        client.println(String("<input type=\"text\" id=\"ssid_esp\" name=\"ssid_esp\" placeholder=\"") + configs::config.getMySSID() + String("\" class=\"form-field\">"));
         client.println("<br>");
         client.println("<label for=\"senha_esp\" class=\"form-label-curto\">Senha:</label>");
-        client.println("<input type=\"text\" id=\"senha_esp\" name=\"ssid_esp\" placeholder=\"VALOR_SENHA_ESP\" class=\"form-field\">");
+        client.println(String("<input type=\"text\" id=\"senha_esp\" name=\"senha_esp\" placeholder=\"") + configs::config.getMyPWD() + String("\" class=\"form-field\">"));
         client.println("<br>");
         client.println("<div class=\"space-before\"></div>");
-        client.println("<button class=\"button\" type=\"button\" onclick=\"enviarDados()\">Salvar</button>");
+        client.println("<button class=\"button\" type=\"button\" onclick=\"enviarDadosRedeInterna()\">Salvar</button>");
         client.println("</div>");
         client.println("</form>");
         client.println("</div>");
@@ -427,24 +504,24 @@ namespace InterfaceWeb
         client.println("<form id=\"DadosSensores\">");
         client.println("<div class=\"form-field\">");
         client.println("<label for=\"qtdSense\" class=\"form-label-x-longo\">Quantidade sensores:</label>");
-        client.println("<input type=\"text\" id=\"qtdSense\" name=\"qtdSense\" placeholder=\"QTD_SENSORES\" class=\"form-field\">");
+        client.println(String("<input type=\"text\" id=\"qtdSense\" name=\"qtdSense\" placeholder=\"") + int(configs::config.getQtdSensores()) + String("\" class=\"form-field\">"));
         client.println("<br>");
         client.println("<label for=\"portaSense\" class=\"form-label-x-longo\">Porta inicial:</label>");
-        client.println("<input type=\"text\" id=\"portaSense\" name=\"portaSense\" placeholder=\"PORTA_SENSORES\" class=\"form-field\">");
+        client.println(String("<input type=\"text\" id=\"portaSense\" name=\"portaSense\" placeholder=\"") + int(configs::config.getPortaIniSensores()) + String("\" class=\"form-field\">"));
         client.println("<br>");
         client.println("<br>");
         client.println("<label for=\"qtdAtua\" class=\"form-label-x-longo\">Quantidade atuadores:</label>");
-        client.println("<input type=\"text\" id=\"qtdAtua\" name=\"qtdAtua\" placeholder=\"QTD_ATUADORES\" class=\"form-field\">");
+        client.println(String("<input type=\"text\" id=\"qtdAtua\" name=\"qtdAtua\" placeholder=\"") + int(configs::config.getQtdAtuadores()) + String("\" class=\"form-field\">"));
         client.println("<br>");
         client.println("<label for=\"portaAtua\" class=\"form-label-x-longo\">Porta inicial:</label>");
-        client.println("<input type=\"text\" id=\"portaAtua\" name=\"portaAtua\" placeholder=\"PORTA_ATUADORES\" class=\"form-field\">");
+        client.println(String("<input type=\"text\" id=\"portaAtua\" name=\"portaAtua\" placeholder=\"") + int(configs::config.getPortaIniAtuadores()) + String("\" class=\"form-field\">"));
         client.println("<br>");
         client.println("<br>");
         client.println("<label for=\"amostragem\" class=\"form-label-x-longo\">Tempo de amostragem:</label>");
-        client.println("<input type=\"text\" id=\"amostragem\" name=\"amostragem\" placeholder=\"AMOSTRAGEM\" class=\"form-field\">");
+        client.println(String("<input type=\"text\" id=\"amostragem\" name=\"amostragem\" placeholder=\"") + int(configs::config.getTempoAmostragem()) + String("\" class=\"form-field\">"));
         client.println("<br>");
         client.println("<div class=\"space-before\"></div>");
-        client.println("<button class=\"button\" type=\"button\" onclick=\"enviarDados()\">Salvar</button>");
+        client.println("<button class=\"button\" type=\"button\" onclick=\"enviarDadosSensoresAtuadores()\">Salvar</button>");
         client.println("</div>");
         client.println("</form>");
         client.println("</div>");
@@ -926,37 +1003,64 @@ namespace InterfaceWeb
                     configs::config.setPWD(value);
                 }
             }
+            configs::saveConfig();
         }
-
-        /*
-        // Iterar sobre as linhas restantes
-        while (true)
+        else if (chave == "RedeInterna")
         {
-            // Encontrar a próxima quebra de linha
-            pos = endLine + 1;
-            endLine = message.find('\n', pos);
-
-            // Se não houver mais quebras de linha, parar
-            if (endLine == std::string::npos)
+            while (parameters.indexOf('\n') != -1)
             {
-                break;
-            }
+                int endParam = parameters.indexOf('=');
+                endLine = parameters.indexOf('\n');
+                String param = parameters.substring(0, endParam);
+                String value = parameters.substring(endParam + 1, endLine);
+                DEBUG(String("Parametro: ") + param + String(" Valor: ") + value);
+                parameters = parameters.substring(endLine + 1);
 
-            // Extrair o parâmetro e valor
-            std::size_t equalsPos = message.find('=', pos);
-            if (equalsPos != std::string::npos && equalsPos < endLine)
-            {
-                std::string parametro = message.substr(pos, equalsPos - pos);
-                std::string valor = message.substr(equalsPos + 1, endLine - equalsPos - 1);
-                parametros.push_back(std::make_pair(parametro, valor));
+                if (param == "ssid_esp")
+                {
+                    configs::config.setMySSID(value);
+                }
+                else if (param == "senha_esp")
+                {
+                    configs::config.setMyPWD(value);
+                }
             }
+            configs::saveConfig();
         }
+        else if (chave == "SensoresAtuadores")
+        {
+            while (parameters.indexOf('\n') != -1)
+            {
+                int endParam = parameters.indexOf('=');
+                endLine = parameters.indexOf('\n');
+                String param = parameters.substring(0, endParam);
+                String value = parameters.substring(endParam + 1, endLine);
+                DEBUG(String("Parametro: ") + param + String(" Valor: ") + value);
+                parameters = parameters.substring(endLine + 1);
 
-        int startIndex = postBody.indexOf("ssid=");
-        int endIndex = postBody.indexOf("&", startIndex);
-        String ssidValue = postBody.substring(startIndex + 5, endIndex);
-        // Faça o mesmo para outros campos...
-        Serial.println("SSID: " + ssidValue);*/
+                if (param == "qtdSense")
+                {
+                    configs::config.setQtdSensores(atoi(value.c_str()));
+                }
+                else if (param == "portaSense")
+                {
+                    configs::config.setPortaIniSensores(atoi(value.c_str()));
+                }
+                else if (param == "qtdAtua")
+                {
+                    configs::config.setQtdAtuadores(atoi(value.c_str()));
+                }
+                else if (param == "portaAtua")
+                {
+                    configs::config.setPortaIniAtuadores(atoi(value.c_str()));
+                }
+                else if (param == "amostragem")
+                {
+                    configs::config.setTempoAmostragem(atoi(value.c_str()));
+                }
+            }
+            configs::saveConfig();
+        }
     }
 
     void loop()

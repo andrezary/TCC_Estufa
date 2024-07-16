@@ -17,4 +17,24 @@
 #define PRINT(texto)
 #endif
 
+//////////////////////////////////////////////
+//Usado em Configs e myWifi
+
+// SSID e senha da rede Wi-Fi
+#define SSID_PADRAO "LaptopDe"
+#define PWD_PADRAO "21021992"
+
+// SSID e senha do Wi-Fi a ser criado
+#define MYSSID_PADRAO "ControladorEstufa"
+#define MYPWD_PADRAO "EstufaAuto"
+
+// Nome de colheita e controlador a ser criado
+#define COLHEITA_PADRAO "Colheita"
+#define CONTROLADOR_PADRAO "Controlador ESP32"
+
+// Nome do Hostname
+#define HOSTNAME "estufa-webserver"
+
+
+/////////////////////////////////////////////////
 #endif /*COMMOM_H*/

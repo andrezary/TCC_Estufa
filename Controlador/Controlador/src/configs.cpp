@@ -7,20 +7,21 @@
 #include "configs.h"
 #include "common.h"
 
-// SSID e senha da rede Wi-Fi
-#define SSID_PADRAO "LaptopDe"
-#define PWD_PADRAO "21021992"
 
-// SSID e senha do Wi-Fi a ser criado
-#define MYSSID_PADRAO "ControladorEstufa"
-#define MYPWD_PADRAO "EstufaAuto"
 
-// Nome de colheita e controlador a ser criado
-#define COLHEITA_PADRAO "Colheita"
-#define CONTROLADOR_PADRAO "Controlador ESP32"
-
+/**
+ * Espaço para implementação de dados e funções referentes as
+ * configurações da estufa.
+ */
 namespace configs
 {
+    /**
+     * configs::config é a variavel global encapsulada no espaço configs
+     * que armazena todas as configurações necessárias para interação 
+     * com o usuario e também para trabalho.
+     * 
+     * 
+     */
     Config config;
 
     Config::Config()
@@ -31,6 +32,13 @@ namespace configs
         strcpy(this->data.pwd, PWD_PADRAO);
         strcpy(this->data.mySSID, MYSSID_PADRAO);
         strcpy(this->data.myPWD, MYPWD_PADRAO);
+        strcpy(this->data.hostname, HOSTNAME);
+
+        this->data.portaIniAtuadores = 0;
+        this->data.portaIniSensores = 0;
+        this->data.qtdAtuadores = 0;
+        this->data.qtdSensores = 0;
+        this->data.tempoAmostragem = 0;
     }
 
     Config::~Config()
@@ -54,6 +62,11 @@ namespace configs
 
     String Config::getPWD()
     {
+        return data.pwd;
+    }
+
+    String Config::getPWDHided()
+    {
         String temp(data.pwd);
         String result;
         for (char c : temp)
@@ -71,6 +84,90 @@ namespace configs
     void Config::setPWD(String pwd)
     {
         strcpy(data.pwd, pwd.c_str());
+    }
+
+    String Config::getMyPWD()
+    {
+        return data.myPWD;
+    }
+
+    String Config::getMyPWDHided()
+    {
+        String temp(data.myPWD);
+        String result;
+        for (char c : temp)
+        {
+            result += '*';
+        }
+        return result;
+    }
+
+    String Config::getMySSID()
+    {
+        DEBUG("--------------------------------------------");
+        DEBUG(String("MySSID:")+String(data.mySSID));
+        DEBUG("--------------------------------------------");
+        return String(data.mySSID);
+    }
+
+    void Config::setMySSID(String ssid)
+    {
+        strcpy(data.mySSID, ssid.c_str());
+    }
+
+    void Config::setMyPWD(String pwd)
+    {
+        strcpy(data.myPWD, pwd.c_str());
+    }
+
+    char Config::getQtdSensores()
+    {
+        return data.qtdSensores;
+    }
+
+    void Config::setQtdSensores(char num)
+    {
+        data.qtdSensores = num;
+    }
+
+    char Config::getPortaIniSensores()
+    {
+        return data.portaIniSensores;
+    }
+
+    void Config::setPortaIniSensores(char num)
+    {
+        data.portaIniSensores = num;
+    }
+
+    char Config::getQtdAtuadores()
+    {
+        return data.qtdAtuadores;
+    }
+
+    void Config::setQtdAtuadores(char num)
+    {
+        data.qtdAtuadores = num;
+    }
+
+    char Config::getPortaIniAtuadores()
+    {
+        return data.portaIniAtuadores;
+    }
+
+    void Config::setPortaIniAtuadores(char num)
+    {
+        data.portaIniAtuadores = num;
+    }
+
+    int Config::getTempoAmostragem()
+    {
+        return data.tempoAmostragem;
+    }
+
+    void Config::setTempoAmostragem(int num)
+    {
+        data.tempoAmostragem = num;
     }
 
     void resetESP32()
@@ -126,6 +223,7 @@ namespace configs
         while (file.available())
         {
             file.read((uint8_t *)&config, sizeof(Config));
+            DEBUG("Lendo arquivo de configuração");
         }
         if (file.available())
         {

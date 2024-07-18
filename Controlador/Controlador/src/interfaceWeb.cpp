@@ -352,14 +352,28 @@ namespace InterfaceWeb
         client.println("\txhr.open(\"POST\", \"/enviar-dados\", true);");
         client.println("\txhr.setRequestHeader(\"Content-Type\", \"application/x-www-form-urlencoded\");");
         client.println("\tvar data = \"SensoresAtuadores\\nqtdSense=\" + encodeURIComponent(qtdSense) + \"\\nportaSense=\" + encodeURIComponent(portaSense) + \"\\n\";");
-        //client.println("\txhr.send(data);");
         client.println("\tdata = data + \"qtdAtua=\" + encodeURIComponent(qtdAtua) + \"\\nportaAtua=\" + encodeURIComponent(portaAtua) + \"\\n\";");
-        //client.println("\txhr.send(data);");
         client.println("\tdata = data + \"amostragem=\" + encodeURIComponent(amostragem) + \"\\n\";");
         client.println("\txhr.send(data);");
         client.println("\talert(\"Dados enviados com sucesso!\");");
         client.println("}");
         ////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////
+        client.println("function enviarDadosSincHora() {");
+        client.println("\tvar sync = document.getElementById(\"sync\").value;");
+
+        client.println("\tif (sync.length < 1) {");
+        client.println("\t\talert(\"Digite um endereço NTP\");");
+        client.println("\treturn;");
+        client.println("\t}");
+
+        client.println("\tvar xhr = new XMLHttpRequest();");
+        client.println("\txhr.open(\"POST\", \"/enviar-dados\", true);");
+        client.println("\txhr.setRequestHeader(\"Content-Type\", \"application/x-www-form-urlencoded\");");
+        client.println("\tvar data = \"SyncDataHora\\nNTPServer=\" + encodeURIComponent(sync)+ \"\\n\";");
+        client.println("\txhr.send(data);");
+        client.println("\talert(\"Dados enviados com sucesso!\");");
+        client.println("}");
         client.println("</script>");
     }
 
@@ -440,16 +454,16 @@ namespace InterfaceWeb
         client.println(String("<input type=\"text\" id=\"nomeColheita\" name=\"nomeColheita\" placeholder=\"") + configs::config.getColheita() + String("\" class=\"form-field\">"));
         client.println("<br>");
         client.println("<label for=\"hora\" class=\"form-label-medio\">Hora:</label>");
-        client.println("<input type=\"time\" id=\"hora\" name=\"hora\" class=\"form-field\">");
+        client.println(String("<input type=\"time\" id=\"hora\" name=\"hora\" value=\"") + getHora() + String("\" class=\"form-field\">"));
         client.println("<br>");
         client.println("<label for=\"data\" class=\"form-label-medio\">Data:</label>");
-        client.println("<input type=\"date\" id=\"data\" name=\"data\" class=\"form-field\">");
+        client.println(String("<input type=\"date\" id=\"data\" name=\"data\" value=\"") + getData(true) + String("\" class=\"form-field\">"));
         client.println("<br>");
         client.println("<div class=\"space-before\"></div>");
-        client.println("<label for=\"sync\" class=\"form-label-x-longo\">Sincronizar com servidor:</label>");
+        client.println("<label for=\"sync\" class=\"form-label-x-longo\">Sincronizar com os servidores NTP:</label>");
         client.println("<br>");
         client.println("<input type=\"text\" id=\"sync\" name=\"sync\" class=\"form-field\">");
-        client.println("<button class=\"button\" type=\"button\" onclick=\"enviarDados()\">Sincronizar</button>");
+        client.println("<button class=\"button\" type=\"button\" onclick=\"enviarDadosSincHora()\">Sincronizar</button>");
         client.println("<br>");
         client.println("<div class=\"space-before\"></div>");
         client.println("<button class=\"button\" type=\"button\" onclick=\"enviarDados()\">Salvar</button>");
@@ -1061,6 +1075,49 @@ namespace InterfaceWeb
             }
             configs::saveConfig();
         }
+        else if (chave == "SyncDataHora")
+        {
+            while (parameters.indexOf('\n') != -1)
+            {
+                int endParam = parameters.indexOf('=');
+                endLine = parameters.indexOf('\n');
+                String param = parameters.substring(0, endParam);
+                String value = parameters.substring(endParam + 1, endLine);
+                DEBUG(String("Parametro: ") + param + String(" Valor: ") + value);
+                parameters = parameters.substring(endLine + 1);
+
+                if (param == "NTPServer")
+                {
+                    const long gmtOffset_sec = -3 * 3600;
+                    const long daylightOffset_sec = 0;
+
+                    PRINTLN(String("Tentando sincronizar relogio com o servidor: ") + value);
+
+                    configTime(gmtOffset_sec, daylightOffset_sec,  "time.google.com", value.c_str());
+                    
+                    //////////////////////////////////////////////////////////////////////////////////////////
+                    //Esses três segundos poderiam ser tirados....
+                    /////////////////////////////////////////////////////////////////////////////////////////
+                    PRINTLN("Aguardando 3segundos!");
+                    delay(3000);
+
+                    struct tm timeinfo;
+                    if(!getLocalTime(&timeinfo))
+                    {
+                        PRINTLN("Falha ao obter a hora NTP");
+                    }
+                    else {
+                        PRINTLN("Data/Hora sincronizada!");
+                        Serial.printf("Ano: %04d, Mês: %02d, Dia: %02d, Hora: %02d, Minuto: %02d, Segundo: %02d\n",
+                                    timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, timeinfo.tm_mday,
+                                    timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
+                    }
+                }
+                
+            }
+            configs::saveConfig();
+        }
+        
     }
 
     void loop()

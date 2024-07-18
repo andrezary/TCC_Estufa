@@ -1,6 +1,8 @@
 #ifndef COMMOM_H
 #define COMMOM_H
 
+#include <Arduino.h>
+
 #define DEBUG_MODE
 
 #ifdef DEBUG_MODE
@@ -35,6 +37,10 @@
 // Nome do Hostname
 #define HOSTNAME "estufa-webserver"
 
+
+
+String getHora(bool full = false);
+String getData(bool formatoHTML = false);
 
 /////////////////////////////////////////////////
 #endif /*COMMOM_H*/

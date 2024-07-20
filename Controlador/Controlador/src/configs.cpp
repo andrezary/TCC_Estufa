@@ -33,6 +33,8 @@ namespace configs
         strcpy(this->data.mySSID, MYSSID_PADRAO);
         strcpy(this->data.myPWD, MYPWD_PADRAO);
         strcpy(this->data.hostname, HOSTNAME);
+        strcpy(this->data.hostMaster, HOSTMASTER_PADRAO);
+        strcpy(this->data.servidorNTP, SERVIDORNTP_PADRAO);
 
         this->data.portaIniAtuadores = 0;
         this->data.portaIniSensores = 0;
@@ -168,6 +170,39 @@ namespace configs
     void Config::setTempoAmostragem(int num)
     {
         data.tempoAmostragem = num;
+    }
+
+    String Config::getServidorNTP()
+    {
+        return String(data.servidorNTP);
+    }
+
+    void Config::setServidorNTP(String value)
+    {
+        strncpy(data.servidorNTP, value.c_str(), sizeof(data.servidorNTP)-1);
+        data.servidorNTP[sizeof(data.servidorNTP)-1] = '\0';
+    }
+
+    String Config::getHostMaster()
+    {
+        return String(data.hostMaster);
+    }
+
+    void Config::setHostMaster(String value)
+    {
+        strncpy(data.hostMaster, value.c_str(), sizeof(data.hostMaster)-1);
+        data.hostMaster[sizeof(data.hostMaster)-1] = '\0';
+    }
+    
+    void Config::setNomeControlador(String value)
+    {
+        strncpy(data.nomeControlador, value.c_str(), sizeof(data.nomeControlador)-1);
+        data.nomeControlador[sizeof(data.nomeControlador)-1] = '\0';
+    }
+    void Config::setColheita(String value)
+    {
+        strncpy(data.nomeColheita, value.c_str(), sizeof(data.nomeColheita)-1);
+        data.nomeColheita[sizeof(data.nomeColheita)-1] = '\0';
     }
 
     void resetESP32()

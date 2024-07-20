@@ -43,8 +43,10 @@ void setupRTC()
 
 void setup()
 {
-  PRINTLN("Inicializando o esp.");
   Serial.begin(115200);
+  PRINTLN("Inicializando o esp.");
+  PRINT("Frenquencia: ");
+  PRINTLN(ESP.getCpuFreqMHz());
   PRINTLN("Iniciando serviço RTC");
   setupRTC();
   configs::setupConfigs();
@@ -58,9 +60,8 @@ void setup()
 
 void loop()
 {
-  delay(100);
+  delay(10);
   mywifi::WiFiCheck();
   InterfaceWeb::loop();
   Controller::loop();
-
 }

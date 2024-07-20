@@ -15,7 +15,7 @@ namespace configs
         int ano;
         char hora;
         char min;
-        char servidor[256];
+        char servidorNTP[256];
 
         char SSID[33];
         char pwd[65];
@@ -29,7 +29,8 @@ namespace configs
         char portaIniAtuadores;
         int tempoAmostragem;
 
-        char hostname[64];
+        char hostname[64]; //TODO: Tem que ver a utilização disso e mudança disso na UI
+        char hostMaster[64];
     };
 
     class Config
@@ -39,9 +40,17 @@ namespace configs
 
         
         public:
+        String getServidorNTP();
+        void setServidorNTP(String value);
+
+        String getHostMaster();
+        void setHostMaster(String value);
+
         String getNomeControlador();
+        void setNomeControlador(String value);
         String getColheita();
-        
+        void setColheita(String value);
+
         String getSSID();
         String getPWD();
         String getPWDHided();

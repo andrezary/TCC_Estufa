@@ -37,10 +37,11 @@
 // Nome do Hostname
 #define HOSTNAME "estufa-webserver"
 
-
+#define HOSTMASTER_PADRAO "Undefined"
+#define SERVIDORNTP_PADRAO "pool.ntp.org"
 
 String getHora(bool full = false);
 String getData(bool formatoHTML = false);
-
+String decodeSTR(const String &str);
 /////////////////////////////////////////////////
 #endif /*COMMOM_H*/

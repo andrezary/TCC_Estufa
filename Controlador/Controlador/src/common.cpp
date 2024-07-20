@@ -31,3 +31,20 @@ String getData(bool formatoHTML)
         strftime(strDate, sizeof(strDate), "%Y-%m-%d", &timeinfo);
     return String(strDate);
 }
+
+String decodeSTR(const String &str) {
+    String decoded = "";
+    int len = str.length();
+    for (int i = 0; i < len; i++) {
+        if (str[i] == '%' && i + 2 < len) {
+            // Pegue o caractere hexadecimal após o '%'
+            String hex = str.substring(i + 1, i + 3);
+            char decodedChar = (char) strtol(hex.c_str(), NULL, 16);
+            decoded += decodedChar;
+            i += 2; // Avance os próximos dois caracteres
+        } else {
+            decoded += str[i];
+        }
+    }
+    return decoded;
+}

@@ -3,6 +3,9 @@
 
 #include <unordered_map>
 
+#define PAG_CONFIG_CONTROLADOR  0
+#define PAG_CONFIG_HOME         1
+
 namespace InterfaceWeb
 {
     using Dictionary = std::unordered_map<const char *, const char *>;

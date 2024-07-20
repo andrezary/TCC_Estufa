@@ -273,6 +273,36 @@ namespace InterfaceWeb
         sendEndPage();
     }
 
+    void sendScriptReset()
+    {
+        client.println("<script>");
+        client.println("function redirecionar() {");
+        client.println("setTimeout(function(){");
+        client.println("window.location.href = \"/\";");
+        client.println("}, 5000);");
+        client.println("}");
+        
+        client.println("</script>");
+    }
+
+    void sendScriptRedirect()
+    {
+        client.println("\txhr.onreadystatechange = function() {");
+        client.println("\t\tif (xhr.readyState == 4) {");
+        client.println("\t\t\tif (xhr.status == 200) {");
+        client.println("\t\t\t\tvar response = JSON.parse(xhr.responseText);");
+        client.println("\t\t\t\tif (response.redirect) {");
+        client.println("\t\t\t\t\twindow.location.href = response.redirect;");
+        client.println("\t\t\t\t} else {");
+        client.println("\t\t\t\t\talert(\"Dados enviados com sucesso, mas sem redirecionamento.\");");
+        client.println("\t\t\t\t}");
+        client.println("\t\t\t} else {");
+        client.println("\t\t\t\talert(\"Erro ao enviar dados: \" + xhr.status);");
+        client.println("\t\t\t}");
+        client.println("\t\t}");
+        client.println("\t};");
+    }
+    
     void sendScriptConfigControlador()
     {
         client.println("<script>");
@@ -293,6 +323,9 @@ namespace InterfaceWeb
         client.println("\txhr.open(\"POST\", \"/enviar-dados\", true);");
         client.println("\txhr.setRequestHeader(\"Content-Type\", \"application/x-www-form-urlencoded\");");
         client.println("\tvar data = \"RedeExterna\\nssid=\" + encodeURIComponent(ssid) + \"\\nsenha=\" + encodeURIComponent(senha) + \"\\n\";");
+
+        sendScriptRedirect();
+
         client.println("\txhr.send(data);");
         client.println("\talert(\"Dados enviados com sucesso!\");");
         client.println("}");
@@ -315,6 +348,9 @@ namespace InterfaceWeb
         client.println("\txhr.open(\"POST\", \"/enviar-dados\", true);");
         client.println("\txhr.setRequestHeader(\"Content-Type\", \"application/x-www-form-urlencoded\");");
         client.println("\tvar data = \"RedeInterna\\nssid_esp=\" + encodeURIComponent(ssid) + \"\\nsenha_esp=\" + encodeURIComponent(senha) + \"\\n\";");
+
+        sendScriptRedirect();
+
         client.println("\txhr.send(data);");
         client.println("\talert(\"Dados enviados com sucesso!\");");
         client.println("}");
@@ -328,7 +364,7 @@ namespace InterfaceWeb
         client.println("\tvar amostragem = parseInt(document.getElementById(\"amostragem\").value, 10);");
 
         client.println("\tif (isNaN(qtdSense) || qtdSense < 0 || qtdSense > 3) {");
-	    client.println("\t\talert(\"Quantidade de sensores inválida!\" + qtdSense);");
+	    client.println("\t\talert(\"Quantidade de sensores inválida!\");");
 	    client.println("\t\treturn;");
         client.println("\t}");
         client.println("\tif (isNaN(portaSense) || portaSense < 32 || portaSense > 32) {");
@@ -354,10 +390,41 @@ namespace InterfaceWeb
         client.println("\tvar data = \"SensoresAtuadores\\nqtdSense=\" + encodeURIComponent(qtdSense) + \"\\nportaSense=\" + encodeURIComponent(portaSense) + \"\\n\";");
         client.println("\tdata = data + \"qtdAtua=\" + encodeURIComponent(qtdAtua) + \"\\nportaAtua=\" + encodeURIComponent(portaAtua) + \"\\n\";");
         client.println("\tdata = data + \"amostragem=\" + encodeURIComponent(amostragem) + \"\\n\";");
+
+        sendScriptRedirect();
+
         client.println("\txhr.send(data);");
         client.println("\talert(\"Dados enviados com sucesso!\");");
         client.println("}");
         ////////////////////////////////////////////////////////////////////////
+        client.println("function enviarDadosControlador() {");
+        client.println("\tvar nome = document.getElementById(\"nome\").value;");
+        client.println("\tvar nomeColheita = document.getElementById(\"nomeColheita\").value;");
+        client.println("\tvar master = document.getElementById(\"master\").value;");
+        client.println("\tvar date = document.getElementById(\"data\").value;");
+        client.println("\tvar hora = document.getElementById(\"hora\").value;");
+        client.println("\tvar manual = document.getElementById(\"manual\").checked;");
+        client.println("\tvar sync = document.getElementById(\"sync\").value;");
+
+        client.println("\tif (!manual) {");
+        client.println("\t\tmanual = \"manual\";");
+        client.println("\t} else {");
+        client.println("\t\tmanual = \"auto\";");
+        client.println("\t}");
+
+        client.println("\tvar xhr = new XMLHttpRequest();");
+        client.println("\txhr.open(\"POST\", \"/enviar-dados\", true);");
+        client.println("\txhr.setRequestHeader(\"Content-Type\", \"application/x-www-form-urlencoded\");");
+        client.println("\tvar data = \"controlador\\nnome=\" + encodeURIComponent(nome) + \"\\nnomeColheita=\" + encodeURIComponent(nomeColheita) + \"\\n\";");
+        client.println("\tvar data =  data + \"master=\" + encodeURIComponent(master) + \"\\nmanual=\" + encodeURIComponent(manual) + \"\\n\";");
+        client.println("\tvar data =  data + \"data=\" + encodeURIComponent(date) + \"\\nhora=\" + encodeURIComponent(hora) + \"\\n\";");
+        client.println("\tvar data =  data + \"sync=\" + encodeURIComponent(sync) + \"\\n\";");
+        
+        sendScriptRedirect();
+
+        client.println("\txhr.send(data);");
+        //client.println("\talert(\"Dados enviados com sucesso!\");");
+        client.println("}");
         ///////////////////////////////////////////////////////////////////////////
         client.println("function enviarDadosSincHora() {");
         client.println("\tvar sync = document.getElementById(\"sync\").value;");
@@ -371,6 +438,9 @@ namespace InterfaceWeb
         client.println("\txhr.open(\"POST\", \"/enviar-dados\", true);");
         client.println("\txhr.setRequestHeader(\"Content-Type\", \"application/x-www-form-urlencoded\");");
         client.println("\tvar data = \"SyncDataHora\\nNTPServer=\" + encodeURIComponent(sync)+ \"\\n\";");
+
+        sendScriptRedirect();
+
         client.println("\txhr.send(data);");
         client.println("\talert(\"Dados enviados com sucesso!\");");
         client.println("}");
@@ -448,10 +518,10 @@ namespace InterfaceWeb
         client.println("<form id=\"DadosControlador\">");
         client.println("<div class=\"form-field\">");
         client.println("<label for=\"nome\" class=\"form-label-medio\">Nome:</label>");
-        client.println(String("<input type=\"text\" id=\"nome\" name=\"nome\" placeholder=\"") + configs::config.getNomeControlador() + String("\" class=\"form-field\">"));
+        client.println(String("<input type=\"text\" id=\"nome\" name=\"nome\" placeholder=\"") + configs::config.getNomeControlador() + String("\" value= \"") + configs::config.getNomeControlador() + String("\" class=\"form-field\">"));
         client.println("<br>");
         client.println("<label for=\"nomeColheita\" class=\"form-label-medio\">Colheita:</label>");
-        client.println(String("<input type=\"text\" id=\"nomeColheita\" name=\"nomeColheita\" placeholder=\"") + configs::config.getColheita() + String("\" class=\"form-field\">"));
+        client.println(String("<input type=\"text\" id=\"nomeColheita\" name=\"nomeColheita\" placeholder=\"") + configs::config.getColheita() + String("\" value= \"") + configs::config.getColheita() + String("\" class=\"form-field\">"));
         client.println("<br>");
         client.println("<label for=\"hora\" class=\"form-label-medio\">Hora:</label>");
         client.println(String("<input type=\"time\" id=\"hora\" name=\"hora\" value=\"") + getHora() + String("\" class=\"form-field\">"));
@@ -459,14 +529,22 @@ namespace InterfaceWeb
         client.println("<label for=\"data\" class=\"form-label-medio\">Data:</label>");
         client.println(String("<input type=\"date\" id=\"data\" name=\"data\" value=\"") + getData(true) + String("\" class=\"form-field\">"));
         client.println("<br>");
-        client.println("<div class=\"space-before\"></div>");
-        client.println("<label for=\"sync\" class=\"form-label-x-longo\">Sincronizar com os servidores NTP:</label>");
+        client.println("<input type=\"checkbox\" name=\"manual\" id=\"manual\" class=\"form-label-medio\" value=\"sim\">");
+        client.println("<label for=\"manual\" class=\"form-label-longo\">Data/Hora manual?</label>");
         client.println("<br>");
-        client.println("<input type=\"text\" id=\"sync\" name=\"sync\" class=\"form-field\">");
+        client.println("<div class=\"space-before\"></div>");
+        client.println("<label for=\"sync\" class=\"form-label-x-longo\">Endereço do Master da estufa na rede:</label>");
+        client.println("<br>");
+        client.println(String("<input type=\"text\" id=\"master\" name=\"master\" value=\"") + configs::config.getHostMaster() + String("\" class=\"form-field\">"));
+        client.println("<br>");
+        client.println("<div class=\"space-before\"></div>");
+        client.println("<label for=\"sync\" class=\"form-label-x-longo\">Sincronizar com o servidor NTP:</label>");
+        client.println("<br>");
+        client.println(String("<input type=\"text\" id=\"sync\" name=\"sync\"value=\"") + configs::config.getServidorNTP() + String("\" class=\"form-field\">"));
         client.println("<button class=\"button\" type=\"button\" onclick=\"enviarDadosSincHora()\">Sincronizar</button>");
         client.println("<br>");
         client.println("<div class=\"space-before\"></div>");
-        client.println("<button class=\"button\" type=\"button\" onclick=\"enviarDados()\">Salvar</button>");
+        client.println("<button class=\"button\" type=\"button\" onclick=\"enviarDadosControlador()\">Salvar</button>");
         client.println("</div>");
         client.println("</form>");
         client.println("</div>");
@@ -953,6 +1031,7 @@ namespace InterfaceWeb
         sendIDControlador();
 
         client.println("Página em construção!");
+        
         client.println("<br>");
 
         sendEndPage();
@@ -970,7 +1049,52 @@ namespace InterfaceWeb
 
     void sendReset()
     {
-        sendConstrucao();
+        sendHeaderHTML();
+
+        client.println("<style>");
+
+        sendStyleTitleAndMenu();
+        sendStyleIDControlador();
+
+        client.println("</style>");
+
+        client.println("<body onload=redirecionar()>");
+
+        sendTitleAndMenu();
+
+        sendIDControlador();
+
+        client.println("Reiniciando controlador!");
+        client.println("<br>");
+
+        sendScriptReset();
+
+        sendEndPage();
+
+    }
+
+    void sendResponsePOST(int pagToRedirect)
+    {
+        client.println("HTTP/1.1 200 OK");
+        client.println("Content-Type: application/json");
+        client.println("Connection: close");
+        client.println();
+        switch (pagToRedirect)
+        {
+        case PAG_CONFIG_CONTROLADOR:
+            client.println("{\"redirect\":\"/config/controlador\"}");
+            break;
+        
+        case PAG_CONFIG_HOME:
+            client.println("{\"redirect\":\"/\"}");
+            break;
+
+        default:
+            client.println("{\"redirect\":\"/\"}");
+            break;
+        }
+        
+        client.flush();
     }
 
     void processPostData(String postBody)
@@ -1018,6 +1142,7 @@ namespace InterfaceWeb
                 }
             }
             configs::saveConfig();
+            sendResponsePOST(PAG_CONFIG_CONTROLADOR);
         }
         else if (chave == "RedeInterna")
         {
@@ -1040,6 +1165,7 @@ namespace InterfaceWeb
                 }
             }
             configs::saveConfig();
+            sendResponsePOST(PAG_CONFIG_CONTROLADOR);
         }
         else if (chave == "SensoresAtuadores")
         {
@@ -1074,6 +1200,7 @@ namespace InterfaceWeb
                 }
             }
             configs::saveConfig();
+            sendResponsePOST(PAG_CONFIG_CONTROLADOR);
         }
         else if (chave == "SyncDataHora")
         {
@@ -1096,7 +1223,7 @@ namespace InterfaceWeb
                     configTime(gmtOffset_sec, daylightOffset_sec,  "time.google.com", value.c_str());
                     
                     //////////////////////////////////////////////////////////////////////////////////////////
-                    //Esses três segundos poderiam ser tirados....
+                    //TODO: Esses três segundos poderiam ser tirados....
                     /////////////////////////////////////////////////////////////////////////////////////////
                     PRINTLN("Aguardando 3segundos!");
                     delay(3000);
@@ -1116,6 +1243,56 @@ namespace InterfaceWeb
                 
             }
             configs::saveConfig();
+            sendResponsePOST(PAG_CONFIG_CONTROLADOR);
+        } 
+        else if(chave == "controlador")
+        {
+            bool manual = false;
+            while (parameters.indexOf('\n') != -1)
+            {
+                int endParam = parameters.indexOf('=');
+                endLine = parameters.indexOf('\n');
+                String param = parameters.substring(0, endParam);
+                String value = parameters.substring(endParam + 1, endLine);
+                DEBUG(String("Parametro: ") + param + String(" Valor: ") + value);
+                parameters = parameters.substring(endLine + 1);
+
+                if (param == "nome")
+                {
+                    value = decodeSTR(value);
+                    configs::config.setNomeControlador(value);
+                }
+                else if (param == "nomeColheita")
+                {
+                    value = decodeSTR(value);
+                    configs::config.setColheita(value);
+                }
+                else if (param == "master")
+                {
+                    configs::config.setHostMaster(value);
+                }
+                else if (param == "sync")
+                {
+                    configs::config.setServidorNTP(value);
+                }
+                else if (param == "manual")
+                {
+                    if(value == "manual")
+                    {
+                        manual = true;
+                    }
+                }
+                else if (param == "data")
+                {
+                    //TODO: Tratar data manual
+                }
+                else if (param == "hora")
+                {
+                    //TODO: Tratar hora manual
+                }
+            }
+            configs::saveConfig();
+            sendResponsePOST(PAG_CONFIG_CONTROLADOR);
         }
         
     }
@@ -1174,6 +1351,10 @@ namespace InterfaceWeb
                             {
                                 sendHeader();
                                 sendReset();
+                                client.flush();
+                                client.stop();
+                                delay(3000);
+                                
                                 configs::resetESP32();
                             }
                             else if (header.indexOf("GET /log") >= 0)
@@ -1197,6 +1378,7 @@ namespace InterfaceWeb
                                 if (postBody != "")
                                 {
                                     processPostData(postBody);
+                                    postBody = "";
                                 }
                             }
                             else

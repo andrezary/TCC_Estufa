@@ -13,12 +13,12 @@ extern bool Run;
 namespace mySerial
 {
     //Variaveis para trabalho
-    HardwareSerial SerialUART(1);
+    //HardwareSerial SerialUART(2);
     Status status;
     
     void setup()
     {
-        SerialUART.begin(115200, SERIAL_8N1, PIN_RX, PIN_TX);
+        Serial2.begin(9600, SERIAL_8N1, PIN_RX, PIN_TX);
         PRINTLN("Serial UART iniciada!");
 
         xTaskCreate(
@@ -32,9 +32,11 @@ namespace mySerial
         PRINTLN("Criada a task da Serial");
     }
 
-    void sendData(DataPacket)
+    void sendData(DataPacket param)
     {
         PRINTLN("SendData()");
+        Serial2.write((uint8_t*)&param, sizeof(DataPacket));
+        PRINTLN(param.msg.strValue);
         threadDelay(500);
     }
 
@@ -51,14 +53,16 @@ namespace mySerial
         //DataPacket packet(0, INIT_SYSTEM, I_AM_DATALOGGER, configs::config.getColheita().c_str());
         DataPacket packet(0, INIT_SYSTEM, I_AM_DATALOGGER, String("teste").c_str());
         PRINTLN("loop da serial");
-        
+        //return;
         if(!status.initiated)
         {
             PRINTLN("Serial não iniciada, iniciando serial");
             //Reseta todos os pools para caso seja um reinicio
             status.reset();
-
+            PRINTLN("SendData packet");
             //Envia o Packet
+            PRINT("sizeof(datapacket):");
+            PRINTLN(sizeof(packet));
             sendData(packet);
 
             unsigned long ellapsed = 0;
@@ -68,10 +72,11 @@ namespace mySerial
             //Aguarda retorno do controlador ou até estourar o tempo de timeout
             while(ellapsed < TIME_TO_INIT)
             {
+                return;
                 PRINTLN("Aguardando retorno da contraparte");
-                if(SerialUART.available()) //Aguarda até ter alguma mensagem para ler
+                if(Serial2.available()) //Aguarda até ter alguma mensagem para ler
                 {
-                    SerialUART.readBytes((uint8_t*)&packet, sizeof(DataPacket));
+                    Serial2.readBytes((uint8_t*)&packet, sizeof(DataPacket));
 
                     if(packet.isChecksumOK()) //Se a msg não conter erros, prossiga 
                     {
@@ -153,7 +158,9 @@ namespace mySerial
         PRINTLN("vTaskDelay");
         while(true)
         {
+            PRINTLN("Entrando no loop Serial!");
             mySerial::loop();
+            PRINTLN("Delay pos loop Serial");
             threadDelay(500);
         }
     }

@@ -1,6 +1,7 @@
 #include <Arduino.h>
 
 #include "common.h"
+
 #include "MsgData.h"
 
 MsgData::MsgData()

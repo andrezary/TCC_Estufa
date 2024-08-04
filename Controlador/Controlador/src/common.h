@@ -48,6 +48,9 @@
 
 #define TIME_DEBUG              10000
 
+#define PIN_RX                  16
+#define PIN_TX                  17
+
 String getHora(bool full = false);
 String getData(bool formatoHTML = false);
 String decodeSTR(const String &str);

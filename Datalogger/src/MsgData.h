@@ -10,10 +10,12 @@
 class MsgData
 {
     public:
-    uint8_t ID_Msg;
-    uint8_t MsgType;
     float value;
     char strValue[TAM_ARRAY_NOMES];
+    uint8_t ID_Msg;
+    uint8_t MsgType;
+    
+    
 
     MsgData();
     MsgData(uint8_t id, uint8_t type, float value, const char* str);

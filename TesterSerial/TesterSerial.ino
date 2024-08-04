@@ -122,7 +122,7 @@ DataPacket::DataPacket()
 
 }
 DataPacket::DataPacket(uint8_t id, uint8_t msgType, float value, const char* str)
-: msg(id, msgType, value, str)
+: msg(id, msgType, value, str), checksum(0)
 {
   this->calcChecksum();
 }
@@ -140,7 +140,10 @@ void loop() {
   
       if(Serial2.available() >= sizeof(DataPacket))
       {
-        Serial2.readBytes((char*)&packet, sizeof(packet));
+        size_t tamanho = Serial2.readBytes((char*)&packet, sizeof(packet));
+        
+        Serial.print("size da leitura: ");
+        Serial.println(tamanho);
         Serial.print("sizeof packet:");
         Serial.println(sizeof(packet));
         Serial.print("Código da mensagem: ");
@@ -153,12 +156,20 @@ void loop() {
         Serial.println(packet.msg.strValue);
         Serial.print("checksum: ");
         Serial.println(packet.checksum);
-
-        
-      }
-      else{
-        Serial.println("aguardando msg ainda");
-        
+        Serial.println("----------------------------");
+        if(packet.msg.MsgType == INIT_SYSTEM && packet.msg.value == I_AM_DATALOGGER)
+        {
+          packet = DataPacket(1, MSG_OK, 0, "\0");
+          Serial2.write((uint8_t*)&packet,sizeof(packet));
+          Serial.println("Enviado o ok para o pacote recebido");
+          packet = DataPacket(0, INIT_SYSTEM, I_AM_CONTROLLER, "teste");
+          Serial2.write((uint8_t*)& packet, sizeof(packet));
+          Serial.println("Enviado o packet com o meu initSystem");
+          
+        }
+        else if(packet.msg.MsgType == MSG_OK && packet.msg.value == 0){
+          Serial.println("Recebi o Ok da mensagem que eu enviei");
+        }
       }
   delay(1000);
 }

@@ -31,9 +31,6 @@
 
 #define threadDelay(timeInMS)   vTaskDelay(pdMS_TO_TICKS(timeInMS))
 
-#define PIN_RX                  16
-#define PIN_TX                  17
-
 namespace mySerial
 {
     void setup();

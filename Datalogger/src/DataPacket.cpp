@@ -3,9 +3,12 @@
 
 #include "DataPacket.h"
 
+
 void DataPacket::calcChecksum()
 {
     uint8_t* p = (uint8_t*) (&this->msg);
+
+    checksum = 0;
 
     for(size_t i = 0; i < sizeof(MsgData); i++)
     {
@@ -24,6 +27,11 @@ bool DataPacket::isChecksumOK()
         sum += p[i];
     }
 
+    Serial.print("Checksum calculado:");
+    Serial.println(sum);
+    Serial.print("Checksum recebido:");
+    Serial.println(this->checksum);
+    
     if(this->checksum == sum)
     {
         return true;
@@ -40,7 +48,7 @@ DataPacket::DataPacket()
 
 }
 DataPacket::DataPacket(uint8_t id, uint8_t msgType, float value, const char* str)
-: msg(id, msgType, value, str)
+: msg(id, msgType, value, str), checksum(0)
 {
     this->calcChecksum();
 }

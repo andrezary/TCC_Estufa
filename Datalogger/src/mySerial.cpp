@@ -1,4 +1,3 @@
-#include <HardwareSerial.h>
 #include<freertos/FreeRTOS.h>
 
 #include "common.h"
@@ -13,7 +12,6 @@ extern bool Run;
 namespace mySerial
 {
     //Variaveis para trabalho
-    //HardwareSerial SerialUART(2);
     Status status;
     
     void setup()
@@ -36,7 +34,8 @@ namespace mySerial
     {
         PRINTLN("SendData()");
         Serial2.write((uint8_t*)&param, sizeof(DataPacket));
-        PRINTLN(param.msg.strValue);
+        PRINT("checksum da msg a enviar:");
+        PRINTLN(param.checksum);
         threadDelay(500);
     }
 
@@ -46,12 +45,14 @@ namespace mySerial
         threadDelay(TIME_DEBUG);
     }
 
+    bool debug_retry = false;
     void loop()
     {
         if(!Run) return;
         Run = false;
         //DataPacket packet(0, INIT_SYSTEM, I_AM_DATALOGGER, configs::config.getColheita().c_str());
         DataPacket packet(0, INIT_SYSTEM, I_AM_DATALOGGER, String("teste").c_str());
+        
         PRINTLN("loop da serial");
         //return;
         if(!status.initiated)
@@ -63,28 +64,43 @@ namespace mySerial
             //Envia o Packet
             PRINT("sizeof(datapacket):");
             PRINTLN(sizeof(packet));
-            sendData(packet);
+            sendData(DataPacket(0, INIT_SYSTEM, I_AM_DATALOGGER, String("teste").c_str()));
 
             unsigned long ellapsed = 0;
             unsigned long retry = 0;
             unsigned long time = millis();//Começa a contar o tempo de timeout para iniciar a comunicação
             
             //Aguarda retorno do controlador ou até estourar o tempo de timeout
-            while(ellapsed < TIME_TO_INIT)
+            while(ellapsed < (TIME_TO_INIT*100))
             {
-                return;
+                //return;
                 PRINTLN("Aguardando retorno da contraparte");
-                if(Serial2.available()) //Aguarda até ter alguma mensagem para ler
+                if(Serial2.available() >= sizeof(DataPacket)) //Aguarda até ter alguma mensagem para ler
                 {
                     Serial2.readBytes((uint8_t*)&packet, sizeof(DataPacket));
-
+                    PRINTLN("Lido os bytes");
+                    Serial.print("sizeof packet:");
+                    Serial.println(sizeof(packet));
+                    Serial.print("Código da mensagem: ");
+                    Serial.println(packet.msg.ID_Msg);
+                    Serial.print("Tipo da mensagem: ");
+                    Serial.println(packet.msg.MsgType);
+                    Serial.print("Valor da mensagem: ");
+                    Serial.println(packet.msg.value);
+                    Serial.print("string: ");
+                    Serial.println(packet.msg.strValue);
+                    Serial.print("checksum: ");
+                    Serial.println(packet.checksum);
+                    Serial.println("----------------------------");
                     if(packet.isChecksumOK()) //Se a msg não conter erros, prossiga 
                     {
+                        PRINTLN("Checksum ok! Interpretando!");
                         //Se for o retorno da mensagem de inicio sistema
                         if(packet.msg.ID_Msg == 0  &&
                             packet.msg.MsgType == MSG_OK)
                         {
                             status.isReceived[0] = 1; //marca o recebimento
+                            Serial.println("Recebido um MSG_OK");
                         }
 
                         //Se for a mensagem se identificando como controlador
@@ -93,6 +109,7 @@ namespace mySerial
                             packet.msg.value == I_AM_CONTROLLER)
                         {
                             status.msgsReceived[0] = packet.msg;//marca o recebimento
+                            Serial.println("Recebido um initsystem de um controlador");
                         }
 
                         //Se não for um controlador
@@ -117,11 +134,12 @@ namespace mySerial
                     break;
                 }
                 
-                if((ellapsed - retry) > TIME_TO_RETRY)
+                if((ellapsed - retry) > TIME_TO_RETRY && 
+                    debug_retry == false)
                 {
                     PRINTLN("TIME OUT");
                     retry = ellapsed;
-                    
+                    debug_retry = true;
                     //sendData(DataPacket(0, INIT_SYSTEM, I_AM_DATALOGGER, configs::config.getColheita().c_str()));
                     sendData(DataPacket(0, INIT_SYSTEM, I_AM_DATALOGGER, String("teste").c_str()));
                 }
@@ -154,13 +172,13 @@ namespace mySerial
     void SerialESPs(void* param)
     {
         PRINTLN("SerialESPs");
-       threadDelay(TIME_TO_INIT); //Aguarda um tempo para inicialização de si próprio e do irmão
+        threadDelay(TIME_TO_INIT); //Aguarda um tempo para inicialização de si próprio e do irmão
         PRINTLN("vTaskDelay");
         while(true)
         {
-            PRINTLN("Entrando no loop Serial!");
+            //PRINTLN("Entrando no loop Serial!");
             mySerial::loop();
-            PRINTLN("Delay pos loop Serial");
+            //PRINTLN("Delay pos loop Serial");
             threadDelay(500);
         }
     }

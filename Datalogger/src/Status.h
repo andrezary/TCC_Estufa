@@ -12,7 +12,7 @@ class Status
 {
     public: //
     MsgData pool[POOL_SIZE];
-    uint8_t isReceived[POOL_SIZE];
+    int8_t isReceived[POOL_SIZE];
 
     MsgData msgsReceived[POOL_SIZE];
 
@@ -22,7 +22,14 @@ class Status
     uint8_t error;
     
     Status();
+
     void reset();
+
+    void pushMsgSended(MsgData msg);
+    void pushMsgReceived(MsgData msg);
+    
+    bool verifyMsgSended(MsgData msg);
+    bool verifyMsgReceived(MsgData msg);
 
 };
 

@@ -5,6 +5,7 @@
 
 #include <stdint.h>
 
+#include "common.h"
 #include "MsgData.h"
 
 class DataPacket

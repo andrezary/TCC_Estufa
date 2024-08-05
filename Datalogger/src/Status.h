@@ -10,13 +10,19 @@
 
 class Status
 {
-    public: //
-    MsgData pool[POOL_SIZE];
+    private:
+    MsgData msgsSended[POOL_SIZE];
     int8_t isReceived[POOL_SIZE];
+    int8_t poolSended;
 
     MsgData msgsReceived[POOL_SIZE];
+    int8_t poolReceived;
+    
+    void incrementPoolSended();
+    void incrementPoolReceived();
 
-    bool initiated;
+    public:
+    int8_t initiated;
     bool correlated;
 
     uint8_t error;
@@ -31,6 +37,9 @@ class Status
     bool verifyMsgSended(MsgData msg);
     bool verifyMsgReceived(MsgData msg);
 
+    void initInterpreted(MsgData msg);
+
+    bool hasInitiated();
 };
 
 #endif

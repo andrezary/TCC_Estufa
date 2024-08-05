@@ -45,6 +45,11 @@
 //Error codes
 #define NO_ERROR                0
 #define ERROR_NOT_CONTROLLER    1
+#define ERROR_INIT_ERROR        2
+
+#define MY_INIT_OK              0x1
+#define FRIEND_INIT_OK          0x2
+#define ALL_INIT_OK             0x3
 
 #define TIME_DEBUG              10000
 

@@ -2,18 +2,19 @@
 #include <Arduino.h>
 
 //ID_Msg
-#define INIT_DATA               0
-#define END_DATA                1
-#define MSG_OK                  2
-#define INIT_SYSTEM             3
-#define RESTART_SYSTEM          4
-#define I_AM_ALIVE              5
-#define MASTER_ALIVE            6
-#define HORARIO_SYNC            7
-#define SENSOR_SIGNAL           8
-#define ATUADOR_CHANGED         9
-#define CONFIG_MSG              10
-#define MSG_ERROR               11
+#define BLANK_MSG               0
+#define INIT_DATA               1
+#define END_DATA                2
+#define MSG_OK                  3
+#define INIT_SYSTEM             4
+#define RESTART_SYSTEM          5
+#define I_AM_ALIVE              6
+#define MASTER_ALIVE            7
+#define HORARIO_SYNC            8
+#define SENSOR_SIGNAL           9
+#define ATUADOR_CHANGED         10
+#define CONFIG_MSG              11
+#define MSG_ERROR               12
 
 //MsgType
 #define I_AM_DATALOGGER         2

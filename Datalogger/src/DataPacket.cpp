@@ -26,11 +26,6 @@ bool DataPacket::isChecksumOK()
     {
         sum += p[i];
     }
-
-    Serial.print("Checksum calculado:");
-    Serial.println(sum);
-    Serial.print("Checksum recebido:");
-    Serial.println(this->checksum);
     
     if(this->checksum == sum)
     {

@@ -21,7 +21,6 @@ void Status::reset()
 
     this->correlated = false;
     this->initiated = false;
-    this->error = NO_ERROR;
     this->poolReceived = 0;
     this->poolSended = 0;
 }

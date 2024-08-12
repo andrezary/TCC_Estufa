@@ -136,41 +136,81 @@ void setup() {
 }
 
 DataPacket packet;
-
+bool fun = false;
 void loop() {
   
-      if(Serial2.available() >= sizeof(DataPacket))
-      {
-        size_t tamanho = Serial2.readBytes((char*)&packet, sizeof(packet));
-        
-        Serial.print("size da leitura: ");
-        Serial.println(tamanho);
-        Serial.print("sizeof packet:");
-        Serial.println(sizeof(packet));
-        Serial.print("Código da mensagem: ");
-        Serial.println(packet.msg.ID_Msg);
-        Serial.print("Tipo da mensagem: ");
-        Serial.println(packet.msg.MsgType);
-        Serial.print("Valor da mensagem: ");
-        Serial.println(packet.msg.value);
-        Serial.print("string: ");
-        Serial.println(packet.msg.strValue);
-        Serial.print("checksum: ");
-        Serial.println(packet.checksum);
-        Serial.println("----------------------------");
-        if(packet.msg.MsgType == INIT_SYSTEM && packet.msg.value == I_AM_DATALOGGER)
+  if(Serial2.available() >= sizeof(DataPacket))
+  {
+    size_t tamanho = Serial2.readBytes((char*)&packet, sizeof(packet));
+    
+    Serial.print("size da leitura: ");
+    Serial.println(tamanho);
+    Serial.print("sizeof packet:");
+    Serial.println(sizeof(packet));
+    Serial.print("Código da mensagem: ");
+    Serial.println(packet.msg.ID_Msg);
+    Serial.print("Tipo da mensagem: ");
+    Serial.println(packet.msg.MsgType);
+    Serial.print("Valor da mensagem: ");
+    Serial.println(packet.msg.value);
+    Serial.print("string: ");
+    Serial.println(packet.msg.strValue);
+    Serial.print("checksum: ");
+    Serial.println(packet.checksum);
+    Serial.println("----------------------------");
+    if(Serial.available())
+    {
+        String str = Serial.readStringUntil('\n');
+
+        str.trim();
+        str.toLowerCase();
+
+        if(str == "passo")
         {
-          packet = DataPacket(1, MSG_OK, 0, "\0");
-          Serial2.write((uint8_t*)&packet,sizeof(packet));
-          Serial.println("Enviado o ok para o pacote recebido");
-          packet = DataPacket(0, INIT_SYSTEM, I_AM_CONTROLLER, "teste");
-          Serial2.write((uint8_t*)& packet, sizeof(packet));
-          Serial.println("Enviado o packet com o meu initSystem");
-          
+            fun = !fun;
         }
-        else if(packet.msg.MsgType == MSG_OK && packet.msg.value == 0){
-          Serial.println("Recebi o Ok da mensagem que eu enviei");
-        }
+    }
+    if(!fun)
+    {
+      packet = DataPacket(0, BLANK_MSG, 0, "\0");
+      delay(1000);
+      return;
+    }
+    if(packet.msg.MsgType == INIT_SYSTEM && packet.msg.value == I_AM_DATALOGGER)
+    {
+      packet = DataPacket(1, MSG_OK, 0, "\0");
+      Serial2.write((uint8_t*)&packet,sizeof(packet));
+      Serial.println("Enviado o ok para o pacote recebido");
+      packet = DataPacket(0, INIT_SYSTEM, I_AM_CONTROLLER, "teste");
+      Serial2.write((uint8_t*)& packet, sizeof(packet));
+      Serial.println("Enviado o packet com o meu initSystem");
+      
+    }
+    else if(packet.msg.MsgType == MSG_OK && packet.msg.value == 0){
+      Serial.println("Recebi o Ok da mensagem que eu enviei");
+    }
+    else if(packet.msg.MsgType == CONFIG_MSG)
+    {
+      Serial.println("Recebida a msg de config");
+      String str("teste config");
+      if(str.compareTo(packet.msg.strValue)  == 0)
+      {
+        packet = DataPacket(packet.msg.ID_Msg, MSG_OK, 0, str.c_str());
+        Serial2.write((uint8_t*)& packet, sizeof(packet));
+        Serial.println("Enviado o MSG OK");
+
+        packet = DataPacket(5, CONFIG_MSG, 0, str.c_str());
+        Serial2.write((uint8_t*)& packet, sizeof(packet));
+        Serial.println("Enviando a msg config minha!");
       }
+    }
+    else if(packet.msg.MsgType == I_AM_ALIVE)
+    {
+      packet = DataPacket(packet.msg.ID_Msg + 1, MSG_OK, packet.msg.ID_Msg, "\0");
+      Serial2.write((uint8_t*)& packet, sizeof(packet));
+      Serial.println("Enviado a resposta para o I_AM_ALIVE");
+    }
+  }
+  packet = DataPacket(0, BLANK_MSG, 0, "\0");
   delay(1000);
 }

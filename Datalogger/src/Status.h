@@ -27,6 +27,8 @@ class Status
 
     uint8_t error;
     
+    unsigned long lastTimeAlive;
+    bool sendedAlive;
     Status();
 
     void reset();

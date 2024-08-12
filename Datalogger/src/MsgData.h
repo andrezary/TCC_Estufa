@@ -35,9 +35,11 @@ class MsgData
     uint8_t MsgType;
     
     
-
+    static uint8_t idCount;
+    
     MsgData();
     MsgData(uint8_t id, uint8_t type, float value, const char* str);
+    MsgData(uint8_t type, float value, const char* str);
 
     bool operator==(const MsgData& data) const;
     void clear();

@@ -3,10 +3,19 @@
 #include "common.h"
 #include "MsgData.h"
 
+uint8_t MsgData::idCount = 0;
+
 MsgData::MsgData()
-: ID_Msg(0), MsgType(0), value(0)
+: ID_Msg(idCount++), MsgType(0), value(0)
 {
     memset(strValue, 0, sizeof(strValue));
+}
+
+
+MsgData::MsgData(uint8_t type, float value, const char* str)
+: MsgData(idCount++, type, value, str)
+{
+
 }
 
 MsgData::MsgData(uint8_t id, uint8_t type, float value, const char* str)

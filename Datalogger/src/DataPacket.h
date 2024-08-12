@@ -16,6 +16,10 @@ class DataPacket
 
     DataPacket();
     DataPacket(uint8_t id, uint8_t msgType, float value, const char* str);
+    DataPacket(uint8_t msgType, float value, const char* str);
+    DataPacket(uint8_t msgType, const char* str);
+    DataPacket(uint8_t msgType);
+    DataPacket(uint8_t msgType, float value);
 
     void calcChecksum();
     bool isChecksumOK();

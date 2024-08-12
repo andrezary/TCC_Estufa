@@ -47,3 +47,27 @@ DataPacket::DataPacket(uint8_t id, uint8_t msgType, float value, const char* str
 {
     this->calcChecksum();
 }
+
+DataPacket::DataPacket(uint8_t msgType, float value, const char* str)
+: msg(msgType, value, str), checksum(0)
+{
+    this->calcChecksum();
+}
+
+DataPacket::DataPacket(uint8_t msgType, const char* str)
+: DataPacket(msgType, 0, str)
+{
+
+}
+
+DataPacket::DataPacket(uint8_t msgType)
+: DataPacket(msgType, 0, "\0")
+{
+
+}
+
+DataPacket::DataPacket(uint8_t msgType, float value)
+: DataPacket(msgType, value, "\0")
+{
+    
+}

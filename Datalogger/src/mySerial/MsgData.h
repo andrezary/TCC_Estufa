@@ -26,24 +26,28 @@
 #define I_AM_DATALOGGER         2
 #define I_AM_CONTROLLER         1
 
-class MsgData
+namespace mySerial
 {
-    public:
-    float value;
-    char strValue[TAM_ARRAY_NOMES];
-    uint8_t ID_Msg;
-    uint8_t MsgType;
-    
-    
-    static uint8_t idCount;
-    
-    MsgData();
-    MsgData(uint8_t id, uint8_t type, float value, const char* str);
-    MsgData(uint8_t type, float value, const char* str);
+    class MsgData
+    {
+        public:
+        float value;
+        char strValue[TAM_ARRAY_NOMES];
+        uint8_t ID_Msg;
+        uint8_t MsgType;
+        
+        
+        static uint8_t idCount;
+        
+        MsgData();
+        MsgData(uint8_t id, uint8_t type, float value, const char* str);
+        MsgData(uint8_t type, float value, const char* str);
 
-    bool operator==(const MsgData& data) const;
-    void clear();
-    String c_str();
-};
+        bool operator==(const mySerial::MsgData& data) const;
+        void clear();
+        String c_str();
+    };
+}
+
 
 #endif

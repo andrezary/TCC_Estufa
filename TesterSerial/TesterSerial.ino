@@ -137,6 +137,7 @@ void setup() {
 
 DataPacket packet;
 bool fun = false;
+bool atuador = false;
 void loop() {
   
   if(Serial2.available() >= sizeof(DataPacket))
@@ -168,6 +169,15 @@ void loop() {
         if(str == "passo")
         {
             fun = !fun;
+        }
+        if(str == "atuador")
+        {
+            packet = DataPacket(33, ATUADOR_CHANGED, 1, "Ativo");
+            Serial2.write((uint8_t*)&packet,sizeof(packet));
+            Serial.println("Enviado o atuador_changed");
+            delay(500);
+            packet = DataPacket(0, BLANK_MSG, 0, "\0");
+            return;
         }
     }
     if(!fun)

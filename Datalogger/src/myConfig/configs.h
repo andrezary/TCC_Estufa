@@ -1,17 +1,14 @@
 #ifndef CONFIGS_H
 #define CONFIGS_H
 
-#include "common.h"
-
 #include <Arduino.h>
 
 namespace configs
 {
-
     struct Data
     {
-        char nomeControlador[TAM_ARRAY_NOMES];
-        char nomeColheita[TAM_ARRAY_NOMES]; 
+        char nomeControlador[33];
+        char nomeColheita[TAM_ARRAY_NOME_COLHEITA]; 
         
         char dia;
         char mes;
@@ -20,11 +17,11 @@ namespace configs
         char min;
         char servidorNTP[256];
 
-        char SSID[TAM_ARRAY_NOMES];
-        char pwd[TAM_ARRAY_NOMES];
+        char SSID[33];
+        char pwd[65];
         
-        char mySSID[TAM_ARRAY_NOMES];
-        char myPWD[TAM_ARRAY_NOMES];
+        char mySSID[33];
+        char myPWD[65];
 
         char qtdSensores;
         char portaIniSensores;
@@ -32,8 +29,8 @@ namespace configs
         char portaIniAtuadores;
         int tempoAmostragem;
 
-        char hostname[TAM_ARRAY_NOMES]; //TODO: Tem que ver a utilização disso e mudança disso na UI
-        char hostMaster[TAM_ARRAY_NOMES];
+        char hostname[64]; //TODO: Tem que ver a utilização disso e mudança disso na UI
+        char hostMaster[64];
     };
 
     class Config
@@ -89,6 +86,12 @@ namespace configs
 
     extern Config config;
     
+    void resetESP32();
 
+    void setupConfigs();
+    
+    void loadConfig();
+    void saveConfig();
+    
 }
 #endif

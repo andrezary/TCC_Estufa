@@ -53,13 +53,23 @@
 #define FRIEND_INIT_OK          0x2
 #define ALL_INIT_OK             0x3
 
+//Tempos em geral
 #define TIME_DEBUG              10000
 
+//PINOS
 #define PIN_RX                  16
 #define PIN_TX                  17
+#define PIN_ONBOARD_LED         2
+#define PIN_STATUS1_LED         32
+#define PIN_STATUS2_LED         33
+#define PIN_STATUS3_LED         14
+#define PIN_START_BUTTON        27
+
+#define threadDelay(timeInMS)   vTaskDelay(pdMS_TO_TICKS(timeInMS))
 
 String getHora(bool full = false);
 String getData(bool formatoHTML = false);
 String decodeSTR(const String &str);
+
 /////////////////////////////////////////////////
 #endif /*COMMOM_H*/

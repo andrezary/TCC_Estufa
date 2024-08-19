@@ -44,10 +44,6 @@ void setupRTC()
 void setup()
 {
   Serial.begin(115200);
-  PRINTLN("Inicializando o esp.");
-  PRINT("Frenquencia: ");
-  PRINTLN(ESP.getCpuFreqMHz());
-  PRINTLN("Iniciando serviço RTC");
   setupRTC();
   configs::setupConfigs();
 

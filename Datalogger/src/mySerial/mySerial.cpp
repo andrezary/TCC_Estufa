@@ -1,21 +1,23 @@
 #include<freertos/FreeRTOS.h>
 
 #include "common.h"
-#include "mySerial.h"
-#include "configs.h"
-#include "MsgData.h"
-#include "Status.h"
-#include "DataPacket.h"
+#include "myConfig/configs.h"
+#include "myConfig/myConfig.h"
+#include "mySerial/mySerial.h"
+#include "mySerial/MsgData.h"
+#include "mySerial/Status.h"
+#include "mySerial/DataPacket.h"
 
 extern bool Run;
 
 namespace mySerial
 {
     //Variaveis para trabalho
-    Status status;
-    bool forceClose = false;
+    mySerial::Status status;
+
     void setup()
     {
+        Serial.begin(115200);
         Serial2.begin(9600, SERIAL_8N1, PIN_RX, PIN_TX);
         PRINTLN("Serial UART iniciada!");
         status.error = CONNECTING_ERROR;
@@ -30,9 +32,9 @@ namespace mySerial
         PRINTLN("Criada a task da Serial");
     }
 
-    void sendData(DataPacket param)
+    void sendData(mySerial::DataPacket param)
     {
-        Serial2.write((uint8_t*)&param, sizeof(DataPacket));
+        Serial2.write((uint8_t*)&param, sizeof(mySerial::DataPacket));
         
         Serial.println("----------------------------");
         PRINTLN("Enviando msg");
@@ -48,9 +50,9 @@ namespace mySerial
         threadDelay(TIME_DEBUG);
     }
 
-    void sendMsgOk(DataPacket param)
+    void sendMsgOk(mySerial::DataPacket param)
     {
-        DataPacket packet(MSG_OK, param.msg.ID_Msg, "\0");
+        mySerial::DataPacket packet(MSG_OK, param.msg.ID_Msg, "\0");
 
         sendData(packet);
     }
@@ -64,14 +66,14 @@ namespace mySerial
         Run = false;*/
 
         //DataPacket packet(0, INIT_SYSTEM, I_AM_DATALOGGER, configs::config.getColheita().c_str());
-        DataPacket packet(0, INIT_SYSTEM, I_AM_DATALOGGER, String("teste").c_str());
+        mySerial::DataPacket packet(0, INIT_SYSTEM, I_AM_DATALOGGER, String("teste").c_str());
         
         
         if(!status.hasInitiated())
         {
             PRINTLN("Serial não iniciada, iniciando serial");
             status.reset(); //Reseta todos os pools para caso seja um reinicio
-            sendData(DataPacket(0, INIT_SYSTEM, I_AM_DATALOGGER, String("teste").c_str())); //Envia o Packet
+            sendData(mySerial::DataPacket(0, INIT_SYSTEM, I_AM_DATALOGGER, String("teste").c_str())); //Envia o Packet
 
             unsigned long ellapsed = 0;
             unsigned long time = millis();//Começa a contar o tempo de timeout para iniciar a comunicação
@@ -108,7 +110,7 @@ namespace mySerial
                         else if(packet.msg.value == 0  &&
                             packet.msg.MsgType == MSG_ERROR) //Se for um erro, reenvia o Init_System
                         {
-                            sendData(DataPacket(0, INIT_SYSTEM, I_AM_DATALOGGER, String("teste").c_str())); //Envia o Packet
+                            sendData(mySerial::DataPacket(0, INIT_SYSTEM, I_AM_DATALOGGER, String("teste").c_str())); //Envia o Packet
                         }
                         //Se for a mensagem se identificando como controlador
                         else if(packet.msg.ID_Msg == 0 &&
@@ -117,7 +119,7 @@ namespace mySerial
                         {
                             status.pushMsgReceived(packet.msg);//marca o recebimento
                             status.initInterpreted(packet.msg);
-                            Serial.println("Recebido um initsystem de um controlador");
+                            PRINTLN("Recebido um initsystem de um controlador");
                             sendMsgOk(packet);
                         }
 
@@ -134,7 +136,7 @@ namespace mySerial
                 ellapsed = millis() - time;
                 if(ellapsed >= (TIME_TO_INIT/2) && !retried)
                 {
-                    sendData(DataPacket(0, INIT_SYSTEM, I_AM_DATALOGGER, String("teste").c_str())); //Envia o Packet
+                    sendData(mySerial::DataPacket(0, INIT_SYSTEM, I_AM_DATALOGGER, String("teste").c_str())); //Envia o Packet
                     retried = true;
                 }
                 threadDelay(500);
@@ -148,7 +150,7 @@ namespace mySerial
         else if(status.hasInitiated() && !status.correlated)
         {
             PRINTLN("Agora tem que verificar a correlação");
-            sendData(DataPacket(CONFIG_MSG, String("teste config").c_str()));
+            sendData(mySerial::DataPacket(CONFIG_MSG, String("teste config").c_str()));
 
             unsigned long ellapsed = 0;
             unsigned long retry = 0;
@@ -216,8 +218,16 @@ namespace mySerial
                     case MSG_OK:
                         PRINTLN("Recebido ok!");
                         break;
+                    case ATUADOR_CHANGED:
+                        PRINTLN("Recebido uma atualização de atuador");
+                        sendMsgOk(packet);
+                        break;
+                    case SENSOR_SIGNAL:
+                        PRINTLN("Recebido uma atualização de sensor");
+                        sendMsgOk(packet);
+                        break;
                     default:
-                        sendData(DataPacket(MSG_ERROR, packet.msg.ID_Msg));
+                        sendData(mySerial::DataPacket(MSG_ERROR, packet.msg.ID_Msg));
                         break;
                     }
                 }
@@ -233,7 +243,7 @@ namespace mySerial
                     PRINTLN(status.sendedAlive);
                     if(!status.sendedAlive)
                     {
-                        sendData(DataPacket(I_AM_ALIVE));
+                        sendData(mySerial::DataPacket(I_AM_ALIVE));
                         status.sendedAlive = true;
                         status.lastTimeAlive = time;
                     }
@@ -258,9 +268,13 @@ namespace mySerial
         threadDelay(TIME_TO_INIT); //Aguarda um tempo para inicialização de si próprio e do irmão
         PRINTLN("vTaskDelay");
         while(true)
-        {   
-            mySerial::loop();
+        {
             threadDelay(500);
+            if(!myConfig::getStatusRun())
+            {
+                continue;
+            }
+            mySerial::loop();
             if(status.error == ERROR_INIT_ERROR)
             {
                 PRINTLN("Erro ao iniciar a serial com o controlador, tentando novamente em 5min");
@@ -272,7 +286,7 @@ namespace mySerial
 
     bool msgsAvailable()
     {
-        if(Serial2.available() >= sizeof(DataPacket))
+        if(Serial2.available() >= sizeof(mySerial::DataPacket))
         {
             return true;
         }
@@ -282,10 +296,10 @@ namespace mySerial
         }
     }
 
-    DataPacket receiveMsg()
+    mySerial::DataPacket receiveMsg()
     {
-        DataPacket packet;
-        Serial2.readBytes((uint8_t*)&packet, sizeof(DataPacket));
+        mySerial::DataPacket packet;
+        Serial2.readBytes((uint8_t*)&packet, sizeof(mySerial::DataPacket));
         PRINTLN("----------------------------");
         PRINTLN("Recebendo msg");
         PRINTLN(packet.msg.c_str());
@@ -297,5 +311,30 @@ namespace mySerial
     uint8_t getErrorStatus()
     {
         return status.error;
+    }
+
+    uint8_t processSerialUSB()
+    {
+        if(Serial.available())
+        {
+            String str = Serial.readStringUntil('\n');
+
+            str.trim();
+            str.toLowerCase();
+
+            if(str == "passo")
+            {
+                return SERIALUSB_CMD_PASSO;
+            }
+            else if(str == "run")
+            {
+                return SERIALUSB_CMD_RUN;
+            }
+            else if(str == "stop")
+            {
+                return SERIALUSB_CMD_STOP;
+            }
+        }
+        return SERIALUSB_CMD_NOTHING;
     }
 }

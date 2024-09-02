@@ -1,10 +1,11 @@
 #include<freertos/FreeRTOS.h>
 
 #include "common.h"
-#include "myConfig/configs.h"
+#include "myConfig/Config.h"
 #include "myConfig/myConfig.h"
 #include "mySerial/mySerial.h"
 #include "mySerial/MsgData.h"
+#define MYSERIAL
 #include "mySerial/Status.h"
 #include "mySerial/DataPacket.h"
 
@@ -14,12 +15,13 @@ namespace mySerial
 {
     //Variaveis para trabalho
     mySerial::Status status;
-
+    bool debug_retry = false;
+    
     void setup()
     {
         Serial.begin(115200);
         Serial2.begin(9600, SERIAL_8N1, PIN_RX, PIN_TX);
-        PRINTLN("Serial UART iniciada!");
+        myPrintln("Serial UART iniciada.", THREAD_MAIN);
         status.error = CONNECTING_ERROR;
         xTaskCreate(
             SerialESPs,
@@ -29,19 +31,12 @@ namespace mySerial
             1,
             NULL
         );
-        PRINTLN("Criada a task da Serial");
+        myPrintln("ThreadSerial lançada.", THREAD_MAIN);
     }
 
     void sendData(mySerial::DataPacket param)
     {
-        Serial2.write((uint8_t*)&param, sizeof(mySerial::DataPacket));
-        
-        Serial.println("----------------------------");
-        PRINTLN("Enviando msg");
-        PRINTLN(param.msg.c_str());
-        PRINT("sizeof: ");
-        PRINTLN(sizeof(param));
-        Serial.println("----------------------------");
+        Serial2.write((uint8_t*)&param, sizeof(mySerial::DataPacket));               
         status.pushMsgSended(param.msg);
     }
 
@@ -57,40 +52,37 @@ namespace mySerial
         sendData(packet);
     }
 
-    bool debug_retry = false;
-
     void loop()
     {
-        /*if(!Run) 
-            return;
-        Run = false;*/
-
         //DataPacket packet(0, INIT_SYSTEM, I_AM_DATALOGGER, configs::config.getColheita().c_str());
         mySerial::DataPacket packet(0, INIT_SYSTEM, I_AM_DATALOGGER, String("teste").c_str());
         
         
         if(!status.hasInitiated())
         {
-            PRINTLN("Serial não iniciada, iniciando serial");
+            myPrintln("Tentando Handshake Serial", THREAD_SERIAL);
             status.reset(); //Reseta todos os pools para caso seja um reinicio
+
             sendData(mySerial::DataPacket(0, INIT_SYSTEM, I_AM_DATALOGGER, String("teste").c_str())); //Envia o Packet
 
             unsigned long ellapsed = 0;
             unsigned long time = millis();//Começa a contar o tempo de timeout para iniciar a comunicação
             bool retried = false;
+            String msg;
             //Aguarda retorno do controlador ou até estourar o tempo de timeout
-            while(ellapsed < (TIME_TO_INIT))
+            while(ellapsed < (MYSERIAL_TIME_TO_INIT))
             {
-                PRINT("Aguardando retorno da contraparte, ellapsed:");
-                PRINTLN(ellapsed);
+                /*msg = "Aguardando retorno da contraparte, ellapsed:" + ellapsed;
+                myPrintln(msg.c_str(), THREAD_SERIAL);*/
+                
                 if(status.error != CONNECTING_ERROR)//Se algo deu errado, termina a espera
                 {
-                    PRINTLN("Aconteceu algum erro durante o handshake!");
+                    myPrintln("Aconteceu algum erro durante o handshake!", THREAD_SERIAL);
                     break;
                 }
                 else if(status.hasInitiated())
                 {
-                    PRINTLN("Troca de msgs incial realizada já! breaking loop...");
+                    myPrintln("Troca de msgs incial realizada já! breaking loop...", THREAD_SERIAL);
                     break;
                 }
                 else if(msgsAvailable()) //Aguarda até ter alguma mensagem para ler
@@ -99,13 +91,13 @@ namespace mySerial
                     
                     if(packet.isChecksumOK()) //Se a msg não conter erros, prossiga 
                     {
-                        PRINTLN("Checksum ok! Interpretando!");
+                        myPrintln("Checksum ok! Interpretando!", THREAD_SERIAL);
                         if(packet.msg.value == 0  &&
                             packet.msg.MsgType == MSG_OK) //Se for o retorno da mensagem de inicio sistema
                         {
                             status.pushMsgReceived(packet.msg);
                             status.initInterpreted(packet.msg);
-                            Serial.println("Recebido um MSG_OK");
+                            myPrintln("Recebido um MSG_OK", THREAD_SERIAL);
                         }
                         else if(packet.msg.value == 0  &&
                             packet.msg.MsgType == MSG_ERROR) //Se for um erro, reenvia o Init_System
@@ -119,7 +111,7 @@ namespace mySerial
                         {
                             status.pushMsgReceived(packet.msg);//marca o recebimento
                             status.initInterpreted(packet.msg);
-                            PRINTLN("Recebido um initsystem de um controlador");
+                            myPrintln("Recebido um initsystem de um controlador", THREAD_SERIAL);
                             sendMsgOk(packet);
                         }
 
@@ -134,22 +126,22 @@ namespace mySerial
                 }
                 
                 ellapsed = millis() - time;
-                if(ellapsed >= (TIME_TO_INIT/2) && !retried)
+                if(ellapsed >= (MYSERIAL_TIME_TO_INIT/2) && !retried)
                 {
                     sendData(mySerial::DataPacket(0, INIT_SYSTEM, I_AM_DATALOGGER, String("teste").c_str())); //Envia o Packet
                     retried = true;
                 }
-                threadDelay(500);
+                threadDelay(MYSERIAL_TIME_LOOPS);
             }
-            if(ellapsed >= TIME_TO_INIT)
+            if(ellapsed >= MYSERIAL_TIME_TO_INIT)
             {
-                PRINTLN("timeout da serial....");
+                myPrintln("timeout da serial....", THREAD_SERIAL);
                 status.error = ERROR_INIT_ERROR;
             }
         }
         else if(status.hasInitiated() && !status.correlated)
         {
-            PRINTLN("Agora tem que verificar a correlação");
+            myPrintln("Agora tem que verificar a correlação", THREAD_SERIAL);
             sendData(mySerial::DataPacket(CONFIG_MSG, String("teste config").c_str()));
 
             unsigned long ellapsed = 0;
@@ -157,26 +149,25 @@ namespace mySerial
             unsigned long time = millis();//Começa a contar o tempo de timeout para iniciar a comunicação
             retry = time;
 
-            while(ellapsed < TIMEOUT_SERIAL)
+            while(ellapsed < MYSERIAL_TIMEOUT_SERIAL)
             {
                 if(msgsAvailable())
                 {
                     packet = receiveMsg();
                     if(packet.isChecksumOK())
                     {
-                        PRINTLN("Checksum ok!");
+                        myPrintln("Checksum ok!", THREAD_SERIAL);
                         if(packet.msg.MsgType == CONFIG_MSG)
                         {
-                            PRINTLN("Config_MSG");
+                            myPrintln("Config_MSG", THREAD_SERIAL);
                         }
                         else{
-                            PRINTLN("Outra msg");
+                            myPrintln("Outra msg", THREAD_SERIAL);
                         }
                         if((packet.msg.MsgType == CONFIG_MSG) && String("teste config").compareTo(packet.msg.strValue) == 0)
                         {
                             status.correlated = true;
-                            Serial.println("Correlacionados");
-                            PRINTLN("Comunicação serial iniciada!");
+                            myPrintln("Comunicação serial iniciada!", THREAD_SERIAL);
                             status.pushMsgReceived(packet.msg);
                             sendMsgOk(packet);
                             status.lastTimeAlive = millis();
@@ -185,26 +176,20 @@ namespace mySerial
                         }
                     }
                 }
+                threadDelay(10);
             }
-            if(ellapsed >= TIMEOUT_SERIAL)
+            if(ellapsed >= MYSERIAL_TIMEOUT_SERIAL)
             {
-                PRINTLN("timeout da serial....");
+                myPrintln("timeout da serial....", THREAD_SERIAL);
                 status.error = ERROR_INIT_ERROR;
             }
         }
         else if(status.hasInitiated() && status.correlated)
         {
-            PRINT("Last Time alive: ");
-            PRINTLN(status.lastTimeAlive);
-            PRINT("actual time: ");
-            PRINTLN(millis());
-            PRINT("delta: ");
-            PRINTLN((millis() - status.lastTimeAlive));
-            
             if(msgsAvailable())
             {
                 packet = receiveMsg();
-                PRINTLN("Processando msg");
+                myPrintln("Processando msg", THREAD_SERIAL);
                 if(packet.isChecksumOK())
                 {
                     status.lastTimeAlive = millis();
@@ -214,16 +199,15 @@ namespace mySerial
                     case I_AM_ALIVE:
                         sendMsgOk(packet);
                         break;
-                    
                     case MSG_OK:
-                        PRINTLN("Recebido ok!");
+                        myPrintln("Recebido ok!", THREAD_SERIAL);
                         break;
                     case ATUADOR_CHANGED:
-                        PRINTLN("Recebido uma atualização de atuador");
+                        myPrintln("Recebido uma atualização de atuador", THREAD_SERIAL);
                         sendMsgOk(packet);
                         break;
                     case SENSOR_SIGNAL:
-                        PRINTLN("Recebido uma atualização de sensor");
+                        myPrintln("Recebido uma atualização de sensor", THREAD_SERIAL);
                         sendMsgOk(packet);
                         break;
                     default:
@@ -236,11 +220,11 @@ namespace mySerial
             else
             {
                 unsigned long time = millis();
-
-                if((time - status.lastTimeAlive) >= TIMEOUT_SERIAL)
+                String str;
+                if((time - status.lastTimeAlive) >= MYSERIAL_TIMEOUT_SERIAL)
                 {
-                    PRINT("Status.SendendAlive");
-                    PRINTLN(status.sendedAlive);
+                    str = "Status.SendendAlive";
+                    str += status.sendedAlive;
                     if(!status.sendedAlive)
                     {
                         sendData(mySerial::DataPacket(I_AM_ALIVE));
@@ -253,32 +237,34 @@ namespace mySerial
                         status.correlated = false;
                         status.error = CONNECTING_ERROR;
                         status.sendedAlive = false;
-                        Serial.println("Encerrado o serial por timeout");
+                        myPrintln("Encerrado o serial por timeout", THREAD_SERIAL);
                     }
                 }
             }
         }
-        threadDelay(500);
+        threadDelay(MYSERIAL_TIME_LOOPS);
     }
 
 
     void SerialESPs(void* param)
     {
-        PRINTLN("SerialESPs");
-        threadDelay(TIME_TO_INIT); //Aguarda um tempo para inicialização de si próprio e do irmão
-        PRINTLN("vTaskDelay");
+        myPrintln("SerialESPs", THREAD_SERIAL);
+        threadDelay(MYSERIAL_TIME_TO_INIT); //Aguarda um tempo para inicialização de si próprio e do irmão
+        myPrintln("vTaskDelay", THREAD_SERIAL);
+        
         while(true)
         {
-            threadDelay(500);
+            threadDelay(MYSERIAL_TIME_LOOPS);
             if(!myConfig::getStatusRun())
             {
                 continue;
             }
+
             mySerial::loop();
             if(status.error == ERROR_INIT_ERROR)
             {
-                PRINTLN("Erro ao iniciar a serial com o controlador, tentando novamente em 5min");
-                threadDelay(300000);
+                myPrintln("Erro ao iniciar a serial com o controlador, tentando novamente em 5min", THREAD_SERIAL);
+                threadDelay(MYSERIAL_TIME_TO_RETRY_CONNECTION);
                 status.error = CONNECTING_ERROR;
             }
         }
@@ -299,12 +285,8 @@ namespace mySerial
     mySerial::DataPacket receiveMsg()
     {
         mySerial::DataPacket packet;
-        Serial2.readBytes((uint8_t*)&packet, sizeof(mySerial::DataPacket));
-        PRINTLN("----------------------------");
-        PRINTLN("Recebendo msg");
-        PRINTLN(packet.msg.c_str());
-        PRINTLN("----------------------------");
-
+        Serial2.readBytes((uint8_t*)&packet, sizeof(mySerial::DataPacket)); 
+        myPrintln("Recebendo msg", THREAD_SERIAL);
         return packet;
     }
 
@@ -333,6 +315,10 @@ namespace mySerial
             else if(str == "stop")
             {
                 return SERIALUSB_CMD_STOP;
+            }
+            else if(str == "reset")
+            {
+                return SERIALUSB_CMD_RESET;
             }
         }
         return SERIALUSB_CMD_NOTHING;

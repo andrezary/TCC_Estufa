@@ -1,7 +1,11 @@
 #ifndef STATUS_H
 #define STATUS_H
 
-#pragma once
+    #ifndef MYSERIAL
+        #error "Status do myConfig está sendo puxado em outro arquivo."
+    #endif
+    
+    #pragma once
 
 #include "common.h"
 #include "mySerial/MsgData.h"

@@ -1,4 +1,6 @@
 #include "common.h"
+
+#define MYSERIAL
 #include "mySerial/Status.h"
 
 

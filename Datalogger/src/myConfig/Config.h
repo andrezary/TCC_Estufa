@@ -1,14 +1,17 @@
 #ifndef CONFIGS_H
 #define CONFIGS_H
 
-#include <Arduino.h>
+#pragma once
 
-namespace configs
+#include <Arduino.h>
+#include "common.h"
+
+namespace myConfig
 {
     struct Data
     {
-        char nomeControlador[33];
-        char nomeColheita[TAM_ARRAY_NOME_COLHEITA]; 
+        char nomeControlador[TAM_ARRAY_NOMES];
+        char nomeColheita[TAM_ARRAY_NOMES]; 
         
         char dia;
         char mes;
@@ -17,10 +20,10 @@ namespace configs
         char min;
         char servidorNTP[256];
 
-        char SSID[33];
+        char SSID[TAM_ARRAY_NOMES];
         char pwd[65];
         
-        char mySSID[33];
+        char mySSID[TAM_ARRAY_NOMES];
         char myPWD[65];
 
         char qtdSensores;
@@ -94,4 +97,5 @@ namespace configs
     void saveConfig();
     
 }
+
 #endif

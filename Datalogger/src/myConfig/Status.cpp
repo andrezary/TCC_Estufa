@@ -1,3 +1,5 @@
+#define MYCONFIG
+
 #include "Status.h"
 
 namespace myConfig

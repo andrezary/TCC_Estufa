@@ -48,3 +48,44 @@ String decodeSTR(const String &str) {
     }
     return decoded;
 }
+
+short int verboseThreads = (1 << THREAD_SERIAL) | 0;
+
+void myPrintln(const char* str, char thread)
+{
+    if((verboseThreads & (1 << thread)) == 0)
+        return;
+
+    switch (thread)
+    {
+    case THREAD_SERIAL:
+        Serial.println("-- Inicio Thread Serial--");
+
+        break;
+    
+    default:
+        break;
+    }
+
+    Serial.println(str);
+
+    switch (thread)
+    {
+    case THREAD_SERIAL:
+        Serial.println("-- Fim Thread Serial--");
+
+        break;
+    
+    default:
+        break;
+    }
+}
+
+
+void setVerbosite(char thread, bool state)
+{
+    if(state)
+        verboseThreads |= (1 << thread);
+    else
+        verboseThreads &= (1 << thread);
+}

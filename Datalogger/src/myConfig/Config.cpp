@@ -4,7 +4,7 @@
 #include <SPIFFS.h>
 #include <time.h>
 
-#include "configs.h"
+#include "Config.h"
 #include "common.h"
 
 
@@ -13,7 +13,7 @@
  * Espaço para implementação de dados e funções referentes as
  * configurações da estufa.
  */
-namespace configs
+namespace myConfig
 {
     /**
      * configs::config é a variavel global encapsulada no espaço configs
@@ -106,9 +106,6 @@ namespace configs
 
     String Config::getMySSID()
     {
-        DEBUG("--------------------------------------------");
-        DEBUG(String("MySSID:")+String(data.mySSID));
-        DEBUG("--------------------------------------------");
         return String(data.mySSID);
     }
 
@@ -207,7 +204,6 @@ namespace configs
 
     void resetESP32()
     {
-        PRINTLN("Reiniciando o ESP32 via solicitação WEB!");
         ESP.restart();
         delay(1000);
     }
@@ -215,13 +211,13 @@ namespace configs
     void setupConfigs()
     {
         // Iniciar o sistema de arquivos SPIFFS
-        DEBUG("SetupConfigs");
         if (!SPIFFS.begin(true))
         {
-            PRINTLN("Falha ao montar o sistema de arquivos, usando valores padrão");
+            myPrintln("Falha ao montar o sistema de arquivos, usando valores padrão", THREAD_MAIN);
         }
         else
         {
+            myPrintln("Montado o sistema de arquivos internos para configuração", THREAD_MAIN);
             loadConfig();
         }
     }
@@ -241,28 +237,27 @@ namespace configs
     void loadConfig()
     {
         File file = SPIFFS.open("/config.txt", "r");
-        DEBUG("loadConfig");
         if (!file)
         {
-            PRINTLN("Falha ao abrir o arquivo, usando configs padrões");
+            myPrintln("Falha ao abrir o arquivo, usando configs padrões", THREAD_MAIN);
             return;
         }
         if (file.available())
         {
-            DEBUG("Arquivo disponivel!");
+            myPrintln("Arquivo disponivel!", THREAD_MAIN);
         }
         else
         {
-            DEBUG("Arquivo indisponivel, carregado dados padrões...");
+            myPrintln("Arquivo indisponivel, carregado dados padrões...", THREAD_MAIN);
         }
         while (file.available())
         {
             file.read((uint8_t *)&config, sizeof(Config));
-            DEBUG("Lendo arquivo de configuração");
+            myPrintln("Lendo arquivo de configuração", THREAD_MAIN);
         }
         if (file.available())
         {
-            DEBUG("Arquivo encerrado!");
+            myPrintln("Arquivo encerrado!", THREAD_MAIN);
         }
 
         file.close();

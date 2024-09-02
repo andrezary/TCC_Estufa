@@ -45,7 +45,7 @@ namespace mySerial
 
         bool operator==(const mySerial::MsgData& data) const;
         void clear();
-        String c_str();
+        String str();
     };
 }
 

@@ -62,7 +62,7 @@ namespace mySerial
         value = 0;
     }
 
-    String MsgData::c_str()
+    String MsgData::str()
     {
         String ret("Mensagem: ");
 
@@ -120,6 +120,7 @@ namespace mySerial
         ret += "String: ";
         ret += this->strValue;
         ret += "\n";
+
         return ret;    
     }
 }

@@ -67,6 +67,11 @@
 
 #define threadDelay(timeInMS)   vTaskDelay(pdMS_TO_TICKS(timeInMS))
 
+#define THREAD_MAIN             0
+#define THREAD_SERIAL           1
+
+void setVerbosite(char thread, bool state);
+void myPrintln(const char* str, char thread);
 String getHora(bool full = false);
 String getData(bool formatoHTML = false);
 String decodeSTR(const String &str);

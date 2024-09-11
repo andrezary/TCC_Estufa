@@ -2,6 +2,40 @@
 
 #include <Arduino.h>
 #include <time.h>
+//#include "mySensors/pins.h"
+//#include "myAtuadores/pins.h"
+
+#define ADC_PIN_FIRST           1
+#define ADC_PIN_LAST            12
+#define DIGITALPIN_FIRST        13
+#define DIGITALPIN_LAST         28
+#define DAC_PIN_FIRST           29
+#define DAC_PIN_LAST            30
+
+void setupPins()
+{
+    pinMode(PIN_ONBOARD_LED, OUTPUT);
+    pinMode(PIN_STATUS1_LED, OUTPUT);
+    pinMode(PIN_STATUS2_LED, OUTPUT);
+    pinMode(PIN_STATUS3_LED, OUTPUT);
+
+    pinMode(PIN_START_BUTTON, INPUT);
+
+
+}
+
+int pinRead(uint8_t pin)
+{
+    if(pin <= ADC_PIN_LAST && pin >= ADC_PIN_FIRST)
+    {
+        if()
+    }
+}
+
+void pinWrite(uint8_t pin, int value)
+{
+
+}
 
 String getHora(bool full)
 {

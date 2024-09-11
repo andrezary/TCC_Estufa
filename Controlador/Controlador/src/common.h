@@ -76,5 +76,7 @@ String getHora(bool full = false);
 String getData(bool formatoHTML = false);
 String decodeSTR(const String &str);
 
+void setupPins();
+
 /////////////////////////////////////////////////
 #endif /*COMMOM_H*/

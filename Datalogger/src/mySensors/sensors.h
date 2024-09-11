@@ -11,6 +11,8 @@ namespace mySensors
         outros
     };
 
-    
+    void setup();
+
+    void setupPins();
 }
 #endif

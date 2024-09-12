@@ -1,13 +1,15 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
-#include <mySensors/mySensors.h>
-#include <mySensors/sensors.h>
-#include <mySensors/calibracao.h>
-
 #include "common.h"
+#include "MsgData.h"
+
+#include "mySensors/mySensors.h"
+#include "mySensors/sensors.h"
+#include "mySensors/calibracao.h"
 
 #pragma once
+
 namespace mySensors
 {
     class Sensor
@@ -41,6 +43,8 @@ namespace mySensors
         
         Sensor();
         ~Sensor();
+
+        Sensor& operator=(const MsgData&);
     };
 }
 

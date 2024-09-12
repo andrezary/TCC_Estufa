@@ -4,7 +4,7 @@
 #include "myConfig/Config.h"
 #include "myConfig/myConfig.h"
 #include "mySerial/mySerial.h"
-#include "mySerial/MsgData.h"
+#include "MsgData.h"
 #define MYSERIAL
 #include "mySerial/Status.h"
 #include "mySerial/DataPacket.h"

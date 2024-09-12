@@ -6,14 +6,14 @@
 #include <stdint.h>
 
 #include "common.h"
-#include "mySerial/MsgData.h"
+#include "MsgData.h"
 
 namespace mySerial
 {
     class DataPacket
     {
         public:
-        mySerial::MsgData msg;
+        MsgData msg;
         uint32_t checksum;
 
         DataPacket();

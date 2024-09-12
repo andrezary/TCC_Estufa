@@ -1,11 +1,14 @@
 #include "calibracao.h"
 
-calibracao::calibracao()
+namespace mySensors
 {
+    calibracao::calibracao()
+    {
 
-}
+    }
 
-calibracao::~calibracao()
-{
+    calibracao::~calibracao()
+    {
 
+    }
 }

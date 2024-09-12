@@ -1,5 +1,6 @@
 #include "mySensors/mySensors.h"
 #include "mySerial/mySerial.h"
+#include "myWifi/myWifi.h"
 
 namespace mySensors
 {
@@ -15,6 +16,7 @@ namespace mySensors
             if(!mySerial::haveSensors())
             {
                 myPrintln("Configuração de sensores não encontrada no controlador.", THREAD_MAIN);
+                
                 if(!myWifi::haveSensors())
                 {
                     myPrintln("Configuração de sensores não encontrada no mestre.", THREAD_MAIN);
@@ -25,7 +27,7 @@ namespace mySensors
                 {
                     for(int i = 0; i < MYSENSORS_MAX_SENSORES; i++)
                     {
-                        sensores[i] = myWifi::getSensors(i);
+                        sensores[i] = myWifi::getSensorConfig(i);
                     }
                     myPrintln("Configuração de sensores encontrada no mestre.", THREAD_MAIN);
                 }

@@ -3,12 +3,16 @@
 
 #pragma once
 
+namespace mySensors
+{
     class calibracao
     {
     private:
         /* data */
     public:
+        calibracao();
         ~calibracao();
     };
+}
 
 #endif

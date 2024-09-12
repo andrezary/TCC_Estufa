@@ -80,4 +80,9 @@ namespace mySensors
     {
         this->calib = value;
     }
+
+    Sensor& Sensor::operator=(const MsgData&)
+    {
+        return *this;
+    }
 }

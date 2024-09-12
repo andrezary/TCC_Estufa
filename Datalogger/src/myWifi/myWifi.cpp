@@ -4,10 +4,12 @@
 #include <String.h>
 #include <ESPmDNS.h>
 
+#include "common.h"
+#include "MsgData.h"
 #include "myConfig/myConfig.h"
 #include "myConfig/Config.h"
 #include "myWifi/myWifi.h"
-#include "common.h"
+
 
 namespace myWifi
 {
@@ -123,5 +125,15 @@ namespace myWifi
         {
             Serial.println("mDNS configurado");
         }
+    }
+
+    bool haveSensors()
+    {
+        return false;
+    }
+
+    MsgData getSensorConfig(int nSensor)
+    {
+        return MsgData();
     }
 }

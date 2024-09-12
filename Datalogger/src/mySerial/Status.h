@@ -8,7 +8,7 @@
     #pragma once
 
 #include "common.h"
-#include "mySerial/MsgData.h"
+#include "MsgData.h"
 
 #define POOL_SIZE               50
 
@@ -17,11 +17,11 @@ namespace mySerial
     class Status
     {
         private:
-        mySerial::MsgData msgsSended[POOL_SIZE];
+        MsgData msgsSended[POOL_SIZE];
         int8_t isReceived[POOL_SIZE];
         int8_t poolSended;
 
-        mySerial::MsgData msgsReceived[POOL_SIZE];
+        MsgData msgsReceived[POOL_SIZE];
         int8_t poolReceived;
         
         void incrementPoolSended();
@@ -40,13 +40,13 @@ namespace mySerial
 
         void reset();
 
-        void pushMsgSended(mySerial::MsgData msg);
-        void pushMsgReceived(mySerial::MsgData msg);
+        void pushMsgSended(MsgData msg);
+        void pushMsgReceived(MsgData msg);
         
-        bool verifyMsgSended(mySerial::MsgData msg);
-        bool verifyMsgReceived(mySerial::MsgData msg);
+        bool verifyMsgSended(MsgData msg);
+        bool verifyMsgReceived(MsgData msg);
 
-        void initInterpreted(mySerial::MsgData msg);
+        void initInterpreted(MsgData msg);
 
         bool hasInitiated();
     };

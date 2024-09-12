@@ -74,7 +74,7 @@ namespace mySerial
         }
     }
 
-    void Status::initInterpreted(mySerial::MsgData msg)
+    void Status::initInterpreted(MsgData msg)
     {
         if(msg.MsgType == MSG_OK)
         {
@@ -98,12 +98,12 @@ namespace mySerial
         }
     }
 
-    bool Status::verifyMsgSended(mySerial::MsgData msg)
+    bool Status::verifyMsgSended(MsgData msg)
     {
 
     }
 
-    bool Status::verifyMsgReceived(mySerial::MsgData msg)
+    bool Status::verifyMsgReceived(MsgData msg)
     {
 
     }

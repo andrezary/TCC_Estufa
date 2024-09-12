@@ -48,7 +48,7 @@ namespace mySerial
 
         checksum = 0;
 
-        for(size_t i = 0; i < sizeof(mySerial::MsgData); i++)
+        for(size_t i = 0; i < sizeof(MsgData); i++)
         {
             this->checksum += p[i];
         }
@@ -60,7 +60,7 @@ namespace mySerial
 
         uint8_t* p = (uint8_t*) (&this->msg);
 
-        for(size_t i = 0; i < sizeof(mySerial::MsgData); i++)
+        for(size_t i = 0; i < sizeof(MsgData); i++)
         {
             sum += p[i];
         }
